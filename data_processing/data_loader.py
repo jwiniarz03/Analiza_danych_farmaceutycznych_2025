@@ -36,7 +36,7 @@ def load_basic_drug_data(xml_file: str):
             "type": drug.get("type"),
             "description": drug.find("db:description", namespaces).text,
             "form": drug.find("db:state", namespaces).text,
-            # "indications": drug.find("db:indications", namespaces).text,
+            "indications": drug.find("db:indication", namespaces).text,
             "mechanism_of_action": drug.find("db:mechanism-of-action", namespaces).text,
             "food_interactions": food_interactions,
         }
