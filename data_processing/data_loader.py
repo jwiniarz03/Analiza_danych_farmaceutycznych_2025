@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 
 
-def load_basic_drug_data(xml_file: str):
+def load_basic_drug_data(xml_file: str) -> dict[str, dict[str, str]]:
     """
     Load the DrugBank partial XML file and parse its data.
 
@@ -9,7 +9,7 @@ def load_basic_drug_data(xml_file: str):
         xml_file (str): Path to the DrugBank XML file.
 
     Returns:
-        dict of dicts: Dictionary of drug basic information dictionaries.
+        dict of dicts: Dictionary with drug id as keys and drug information as values.
     """
 
     tree = ET.parse(xml_file)
