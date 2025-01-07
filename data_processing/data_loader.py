@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 
 def load_basic_drug_data(xml_file: str) -> dict[str, dict[str, str]]:
     """
-    Load the DrugBank partial XML file and parse its data.
+    Load the DrugBank partial XML file and parse its data for basic informations.
 
     Args:
         xml_file (str): Path to the DrugBank XML file.
@@ -43,3 +43,34 @@ def load_basic_drug_data(xml_file: str) -> dict[str, dict[str, str]]:
         basic_drugs_data[id] = basic_drug_info
 
     return basic_drugs_data
+
+
+def load_drug_synonyms_data(xml_file: str) -> dict:
+    """
+    Load the DrugBank partial XML file and parse its data for basic informations.
+
+    Args:
+        xml_file (str): Path to the DrugBank XML file.
+
+    Returns:
+        dict: Dictionary with drug id as keys and drug synonyms as values.
+    """
+
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+
+    # Namespace handling for XML parsing
+    namespaces = {"db": "http://www.drugbank.ca"}
+
+    synonyms_drugs_data = {}
+    for drug in root.findall("db:drug", namespaces):
+        id = drug.find("db:drugbank-id[@primary='true']", namespaces).text
+        synonyms = "\n".join(
+            [
+                synonym.text
+                for synonym in drug.findall("db:synonyms/db:synonym", namespaces)
+            ]
+        )
+        synonyms_drugs_data[id] = synonyms
+
+    return synonyms_drugs_data
