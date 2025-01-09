@@ -12,8 +12,10 @@ def create_data_frame_basic_info(drugs_data: dict) -> pd.DataFrame:
         pd.DataFrame: DataFrame with drug data.
     """
 
-    return (
+    df = (
         pd.DataFrame.from_dict(drugs_data, orient="index")
         .reset_index()
         .rename(columns={"index": "id"})
     )
+
+    return df
