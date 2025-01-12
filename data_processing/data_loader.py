@@ -65,11 +65,14 @@ def load_drug_synonyms_data(xml_file: str) -> dict:
     synonyms_drugs_data = {}
     for drug in root.findall("db:drug", namespaces):
         id = drug.find("db:drugbank-id[@primary='true']", namespaces).text
-        synonyms = [
-            synonym.text
-            for synonym in drug.findall("db:synonyms/db:synonym", namespaces)
-        ]
+        synonyms = "\n".join(
+            [
+                synonym.text
+                for synonym in drug.findall("db:synonyms/db:synonym", namespaces)
+            ]
+        )
+        all_synonyms = {"synonyms": synonyms}
 
-        synonyms_drugs_data[id] = synonyms
+        synonyms_drugs_data[id] = all_synonyms
 
     return synonyms_drugs_data
