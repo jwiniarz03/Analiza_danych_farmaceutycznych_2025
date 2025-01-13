@@ -21,7 +21,7 @@ def create_data_frame_basic_info(drugs_data: dict) -> pd.DataFrame:
     return df
 
 
-def create_data_frame_find_synonyms(synonyms_data: dict) -> pd.DataFrame:
+def create_data_frame_synonyms(synonyms_data: dict) -> pd.DataFrame:
     """
     Create a pandas DataFrame from the synonyms data dictionary.
 
