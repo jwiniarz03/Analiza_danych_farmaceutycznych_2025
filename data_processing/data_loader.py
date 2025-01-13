@@ -45,7 +45,7 @@ def load_basic_drug_data(xml_file: str) -> dict[str, dict[str, str]]:
     return basic_drugs_data
 
 
-def load_drug_synonyms_data(xml_file: str) -> dict:
+def load_drug_synonyms_data(xml_file: str) -> dict[str:str]:
     """
     Load the DrugBank partial XML file and parse its data for basic informations.
 
@@ -53,7 +53,7 @@ def load_drug_synonyms_data(xml_file: str) -> dict:
         xml_file (str): Path to the DrugBank XML file.
 
     Returns:
-        dict: Dictionary with drug id as keys and drug synonyms as values.
+        dict: Dictionary with drug id as keys and a single string of synonyms separated by newlines as values.
     """
 
     tree = ET.parse(xml_file)
@@ -66,13 +66,10 @@ def load_drug_synonyms_data(xml_file: str) -> dict:
     for drug in root.findall("db:drug", namespaces):
         id = drug.find("db:drugbank-id[@primary='true']", namespaces).text
         synonyms = "\n".join(
-            [
-                synonym.text
-                for synonym in drug.findall("db:synonyms/db:synonym", namespaces)
-            ]
+            synonym.text
+            for synonym in drug.findall("db:synonyms/db:synonym", namespaces)
         )
-        all_synonyms = {"synonyms": synonyms}
 
-        synonyms_drugs_data[id] = all_synonyms
+        synonyms_drugs_data[id] = synonyms
 
     return synonyms_drugs_data
