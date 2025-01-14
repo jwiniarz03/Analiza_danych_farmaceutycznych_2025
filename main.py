@@ -1,4 +1,8 @@
-from data_processing.data_loader import load_basic_drug_data, load_drug_synonyms_data
+from data_processing.data_loader import (
+    load_basic_drug_data,
+    load_drug_synonyms_data,
+    load_products_data,
+)
 from data_processing.data_frames import (
     create_data_frame_basic_info,
     create_data_frame_synonyms,
@@ -20,4 +24,6 @@ if __name__ == "__main__":
 
     G = generate_synonyms_graph(drug_id, synonyms_df)
 
-    plot_synonyms_graph(G, drug_id)
+    # plot_synonyms_graph(G, drug_id)
+
+    products_data = load_products_data(file_path)
