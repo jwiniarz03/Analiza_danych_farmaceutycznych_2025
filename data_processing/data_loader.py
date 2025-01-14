@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 
 
-def load_basic_drug_data(xml_file: str) -> dict[str, dict[str, str]]:
+def load_basic_drug_data(xml_file: str) -> dict[str : dict[str:str]]:
     """
     Load the DrugBank partial XML file and parse its data for basic informations.
 
@@ -9,7 +9,7 @@ def load_basic_drug_data(xml_file: str) -> dict[str, dict[str, str]]:
         xml_file (str): Path to the DrugBank XML file.
 
     Returns:
-        dict of dicts: Dictionary with drug id as keys and drug information as values.
+        dict: Dictionary with drug id as keys and drug information as values.
     """
 
     tree = ET.parse(xml_file)
@@ -47,7 +47,7 @@ def load_basic_drug_data(xml_file: str) -> dict[str, dict[str, str]]:
 
 def load_drug_synonyms_data(xml_file: str) -> dict[str:str]:
     """
-    Load the DrugBank partial XML file and parse its data for basic informations.
+    Load the DrugBank partial XML file and parse its data for synonyms informations.
 
     Args:
         xml_file (str): Path to the DrugBank XML file.
@@ -73,3 +73,41 @@ def load_drug_synonyms_data(xml_file: str) -> dict[str:str]:
         synonyms_drugs_data[id] = synonyms
 
     return synonyms_drugs_data
+
+
+def load_products_data(xml_file) -> list[dict[str:str]]:
+    """
+    Load the DrugBank partial xml file and parse its data for informations about products.
+
+    Args:
+        xml_file (str): Path to the DrugBank XML file.
+
+    Returns:
+        list of dicts: List of products containing specified drug.
+    """
+
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+
+    # Namespace handling for XML parsing
+    ns = {"db": "http://www.drugbank.ca"}
+
+    basic_products_data = []
+
+    for drug in root.findall("db:drug", ns):
+        id = drug.find("db:drugbank-id[@primary='true']", ns).text
+        for product in drug.findall("db:products/db:product", ns):
+            product_data = {
+                "Drug ID": id,
+                "Product name": (product.find("db:name", ns).text),
+                "Producer": (product.find("db:labeller", ns).text),
+                "National Drug Code": (product.find("db:ndc-product-code", ns).text),
+                "Form": (product.find("db:dosage-form", ns).text),
+                "Method of application": (product.find("db:route", ns).text),
+                "Dose information": (product.find("db:strength", ns).text),
+                "Country": (product.find("db:country", ns).text),
+                "Agency": (product.find("db:source", ns).text),
+            }
+        basic_products_data.append(product_data)
+
+    return basic_products_data
