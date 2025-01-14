@@ -111,3 +111,34 @@ def load_products_data(xml_file) -> list[dict[str:str]]:
         basic_products_data.append(product_data)
 
     return basic_products_data
+
+
+def load_pathways_data(xml_file) -> list[dict[str:str]]:
+    """
+    Load the DrugBank partial xml file and parse its data for informations about pathways.
+
+    Args:
+        xml_file (str): Path to the DrugBank XML file.
+
+    Returns:
+        list of dicts: List of pathways and their categories.
+    """
+
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+
+    # Namespace handling for XML parsing
+    ns = {"db": "http://www.drugbank.ca"}
+
+    pathways_data = []
+
+    for drug in root.findall("db:drug", ns):
+        for pathway in drug.findall("db:pathways/db:pathway", ns):
+            pathway_data = {
+                "Pathway": (pathway.find("db:name", ns).text),
+                "Category": (pathway.find("db:category", ns).text),
+            }
+            if pathway_data not in pathways_data:
+                pathways_data.append(pathway_data)
+
+    return pathways_data
