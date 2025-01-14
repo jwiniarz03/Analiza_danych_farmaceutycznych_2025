@@ -21,7 +21,7 @@ def create_data_frame_basic_info(drugs_data: dict) -> pd.DataFrame:
     return df
 
 
-def create_data_frame_synonyms(synonyms_data: dict) -> pd.DataFrame:
+def create_data_frame_synonyms(synonyms_data: list[dict[str:str]]) -> pd.DataFrame:
     """
     Create a pandas DataFrame from the synonyms data dictionary.
 
@@ -36,5 +36,21 @@ def create_data_frame_synonyms(synonyms_data: dict) -> pd.DataFrame:
         synonyms_data, orient="index", columns=["synonyms"]
     ).reset_index()
     df.rename(columns={"index": "drug_id"}, inplace=True)
+
+    return df
+
+
+def create_data_frame_products(products_data: dict) -> pd.DataFrame:
+    """
+    Create a pandas DataFrame from the products data dictionary.
+
+    Args:
+        products_data (list[dict[str:str]]): List of products containing specified drug.
+
+    Returns:
+        pd.DataFrame: DataFrame with products data.
+    """
+
+    df = pd.DataFrame(products_data)
 
     return df
