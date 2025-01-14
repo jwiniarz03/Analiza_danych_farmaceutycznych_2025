@@ -6,6 +6,7 @@ from data_processing.data_loader import (
 from data_processing.data_frames import (
     create_data_frame_basic_info,
     create_data_frame_synonyms,
+    create_data_frame_products,
 )
 from visualisations.graphs import generate_synonyms_graph, plot_synonyms_graph
 
@@ -27,3 +28,5 @@ if __name__ == "__main__":
     # plot_synonyms_graph(G, drug_id)
 
     products_data = load_products_data(file_path)
+
+    products_df = create_data_frame_products(products_data)
