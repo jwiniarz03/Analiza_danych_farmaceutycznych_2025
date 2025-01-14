@@ -54,3 +54,14 @@ def create_data_frame_products(products_data: dict) -> pd.DataFrame:
     df = pd.DataFrame(products_data)
 
     return df
+
+
+def create_data_frame_pathways(pathways_data: dict) -> pd.DataFrame:
+    """ """
+    df = pd.DataFrame(pathways_data)
+
+    count = df.count()
+
+    p_count = f"Całkowita liczba szkalów wynosi {count}"
+
+    return df, p_count
