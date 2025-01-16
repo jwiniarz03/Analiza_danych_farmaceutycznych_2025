@@ -62,3 +62,65 @@ def plot_synonyms_graph(G: nx.Graph, drug_id: str):
 
     plt.title(f"Star Graph for DrugBank ID: {drug_id}")
     plt.show()
+
+
+class BipartiteGraph:
+    def __init__(self):
+        """
+        Initialize the bipartite graph with two sets of vertices and an adjacency list.
+        """
+        self.P = set()  # First set of vertices --> Pathways
+        self.D = set()  # Second set of vertices --> Drugs
+        self.adj_list = {}  # Adjacency list to store edges
+
+    def add_vertex(self, vertex, set_type):
+
+        if set_type == "P":
+            self.P.add(vertex)
+        elif set_type == "D":
+            self.D.add(vertex)
+        else:
+            raise ValueError("set_type must be either 'U' or 'V'")
+        # Initialize the adjacency list for the new vertex
+        self.adj_list[vertex] = []
+
+    def add_edge(self, p, d):
+        if (p in self.P and d in self.D) or (p in self.D and d in self.P):
+            self.adj_list[p].append(d)
+            self.adj_list[d].append(p)
+        else:
+            raise ValueError("Edge must connect vertices from different sets")
+
+    def is_bipartite(self):
+        color = {}
+        for vertex in list(self.U) + list(self.V):
+            if vertex not in color:
+                if not self._bfs_check(vertex, color):
+                    return False
+        return True
+
+    def _bfs_check(self, start, color):
+        from collections import deque
+
+        queue = deque([start])
+        color[start] = 0  # Start coloring with color 0
+
+        while queue:
+            vertex = queue.popleft()
+            current_color = color[vertex]
+
+            for neighbor in self.adj_list[vertex]:
+                if neighbor not in color:
+                    color[neighbor] = 1 - current_color  # Alternate color
+                    queue.append(neighbor)
+                elif color[neighbor] == current_color:
+                    return False
+
+        return True
+
+    def display(self):
+        print("Set P:", self.P)
+        print("Set D:", self.D)
+        print("Adjacency List:")
+        for vertex, neighbors in self.adj_list.items():
+            print(f"{vertex}: {neighbors}")
