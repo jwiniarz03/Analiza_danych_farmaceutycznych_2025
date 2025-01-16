@@ -142,3 +142,29 @@ def load_pathways_data(xml_file) -> list[dict[str:str]]:
                 pathways_data.append(pathway_data)
 
     return pathways_data
+
+
+def load_pathways_drugs_data(xml_file) -> list[dict[str:str]]:
+
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+
+    # Namespace handling for XML parsing
+    ns = {"db": "http://www.drugbank.ca"}
+
+    drugs_data = []
+
+    for drug in root.findall("db:drug", ns):
+        for pathway in drug.findall("db:pathways/db:pathway", ns):
+            pathway_name = pathway.find("db:name", ns).text
+            for drug in pathway.findall("db:drugs/db:drug", ns):
+                drug_id = drug.find("db:drugbank-id", ns).text
+                drug_name = drug.find("db:name", ns).text
+                pathway_data = {
+                    "Pathway": pathway_name,
+                    "DrugBank ID": drug_id,
+                    "Drug Name": drug_name,
+                }
+                drugs_data.append(pathway_data)
+
+    return drugs_data
