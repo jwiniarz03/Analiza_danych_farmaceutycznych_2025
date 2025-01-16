@@ -113,37 +113,6 @@ def load_products_data(xml_file) -> list[dict[str:str]]:
     return basic_products_data
 
 
-def load_pathways_data(xml_file) -> list[dict[str:str]]:
-    """
-    Load the DrugBank partial xml file and parse its data for informations about pathways.
-
-    Args:
-        xml_file (str): Path to the DrugBank XML file.
-
-    Returns:
-        list of dicts: List of pathways and their categories.
-    """
-
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-
-    # Namespace handling for XML parsing
-    ns = {"db": "http://www.drugbank.ca"}
-
-    pathways_data = []
-
-    for drug in root.findall("db:drug", ns):
-        for pathway in drug.findall("db:pathways/db:pathway", ns):
-            pathway_data = {
-                "Pathway": (pathway.find("db:name", ns).text),
-                "Category": (pathway.find("db:category", ns).text),
-            }
-            if pathway_data not in pathways_data:
-                pathways_data.append(pathway_data)
-
-    return pathways_data
-
-
 def load_pathways_drugs_data(xml_file) -> list[dict[str:str]]:
 
     tree = ET.parse(xml_file)
@@ -157,14 +126,17 @@ def load_pathways_drugs_data(xml_file) -> list[dict[str:str]]:
     for drug in root.findall("db:drug", ns):
         for pathway in drug.findall("db:pathways/db:pathway", ns):
             pathway_name = pathway.find("db:name", ns).text
+            category = pathway.find("db:category", ns).text
+            drugs_list = []
             for drug in pathway.findall("db:drugs/db:drug", ns):
-                drug_id = drug.find("db:drugbank-id", ns).text
                 drug_name = drug.find("db:name", ns).text
-                pathway_data = {
-                    "Pathway": pathway_name,
-                    "DrugBank ID": drug_id,
-                    "Drug Name": drug_name,
-                }
-                drugs_data.append(pathway_data)
+                drugs_list.append(drug_name)
+            drugs = ", ".join(drugs_list)
+            pathway_data = {
+                "Pathway": pathway_name,
+                "Category": category,
+                "Drug Name": drugs,
+            }
+            drugs_data.append(pathway_data)
 
     return drugs_data
