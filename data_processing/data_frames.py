@@ -64,4 +64,11 @@ def create_data_frame_pathways(pathways_data: dict) -> pd.DataFrame:
 
     p_count = f"Całkowita liczba szkalów wynosi {count}"
 
-    return df, p_count
+    return df[["Pathway", "Category"]], p_count
+
+
+def create_data_frame_path_drug(path_drug_data):
+
+    df = pd.DataFrame(path_drug_data)
+
+    return df[["Pathway", "Drug Name"]]
