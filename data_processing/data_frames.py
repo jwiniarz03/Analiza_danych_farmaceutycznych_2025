@@ -1,4 +1,6 @@
 import pandas as pd
+from data_processing.data_loader import DataLoader
+from src.targets import Target, Polypeptide
 
 
 def create_data_frame_basic_info(drugs_data: dict) -> pd.DataFrame:
@@ -72,3 +74,36 @@ def create_data_frame_path_drug(path_drug_data):
     df = pd.DataFrame(path_drug_data)
 
     return df[["Pathway", "Drug Name"]]
+
+
+class UniversalDataFrame:
+
+    def __init__(self, xml_file: str):
+        self.data_loader = DataLoader(xml_file)
+        self.targets = self.data_loader.parse_targets()
+
+    def create_targets_interactions_dataframe(self) -> pd.DataFrame:
+        """Creates a DataFrame with targets interaction information."""
+        data = {
+            "DrugBank ID": [],
+            "Source": [],
+            "External ID": [],
+            "Polypeptide name": [],
+            "Gene name": [],
+            "GenAtlas ID": [],
+            "Chromosome number": [],
+            "Cellular location": [],
+        }
+
+        for target in self.targets:
+            polypeptide = target.polypeptide
+            data["DrugBank ID"].append(target.id)
+            data["Source"].append(polypeptide.source)
+            data["External ID"].append(polypeptide.id)
+            data["Polypeptide name"].append(polypeptide.name)
+            data["Gene name"].append(polypeptide.gene_name)
+            data["GenAtlas ID"].append(polypeptide.genatlas_id)
+            data["Chromosome number"].append(polypeptide.chromosome_location)
+            data["Cellular location"].append(polypeptide.cellular_location)
+
+        return pd.DataFrame(data)
