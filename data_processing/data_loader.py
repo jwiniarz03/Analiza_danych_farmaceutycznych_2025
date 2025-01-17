@@ -1,4 +1,6 @@
 import xml.etree.ElementTree as ET
+from typing import List
+from src.targets import Target, Polypeptide
 
 
 def load_basic_drug_data(xml_file: str) -> dict[str : dict[str:str]]:
@@ -140,3 +142,57 @@ def load_pathways_drugs_data(xml_file) -> list[dict[str:str]]:
             drugs_data.append(pathway_data)
 
     return drugs_data
+
+
+class DataLoader:
+
+    def __init__(self, xml_data: str):
+        self.xml_data = xml_data
+
+    def parse_targets(self) -> List[Target]:
+        """Parse XML data and return a list of Target objects"""
+        tree = ET.parse(self.xml_data)
+        root = tree.getroot()
+
+        # Namespace handling for XML parsing
+        ns = {"db": "http://www.drugbank.ca"}
+
+        targets = []
+
+        for drug in root.findall("db:drug", ns):
+            for target in drug.findall("db:targets/db:target", ns):
+                id = target.find("db:id", ns).text
+                name = target.find("db:name", ns).text
+                polypeptide_general = target.find("db:polypeptide", ns)
+
+                if polypeptide_general is None:
+                    continue
+
+                genatlas_id = None
+
+                for ext_id in polypeptide_general.findall(
+                    "db:external-identifiers/db:external-identifier", ns
+                ):
+                    resource = ext_id.find("db:resource", ns).text
+                    identifier = ext_id.find("db:identifier", ns).text
+                    if resource == "GenAtlas":
+                        genatlas_id = identifier
+
+                polypeptide = Polypeptide(
+                    id=polypeptide_general.attrib["id"],
+                    source=polypeptide_general.attrib["source"],
+                    name=polypeptide_general.find("db:name", ns).text,
+                    gene_name=polypeptide_general.find("db:gene-name", ns).text,
+                    genatlas_id=genatlas_id,
+                    chromosome_location=polypeptide_general.find(
+                        "db:chromosome-location", ns
+                    ).text,
+                    cellular_location=polypeptide_general.find(
+                        "db:cellular-location", ns
+                    ).text,
+                )
+
+                new_Target = Target(id, name, polypeptide)
+                targets.append(new_Target)
+
+        return targets
