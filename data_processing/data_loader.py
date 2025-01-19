@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 from typing import List
 from src.targets import Target, Polypeptide
+from src.drugs import Drug
 
 
 def load_basic_drug_data(xml_file: str) -> dict[str : dict[str:str]]:
@@ -196,3 +197,47 @@ class DataLoader:
                 targets.append(new_Target)
 
         return targets
+
+    def parse_drugs(self) -> List[Drug]:
+        """Parse XML data and return a list of Drug objects"""
+
+        tree = ET.parse(self.xml_data)
+        root = tree.getroot()
+
+        # Namespace handling for XML parsing
+        ns = {"db": "http://www.drugbank.ca"}
+
+        drugs = []
+
+        for drug in root.findall("db:drug", ns):
+            id = drug.find("db:drugbank-id[@primary='true']", ns).text
+            name = drug.find("db:name", ns).text
+            type = drug.get("type")
+            description = drug.find("db:description", ns).text
+            form = drug.find("db:state", ns).text
+            indication = drug.find("db:indication", ns).text
+            mechanism_of_action = drug.find("db:mechanism-of-action", ns).text
+            food_interactions = "\n".join(
+                [
+                    food.text
+                    for food in drug.findall(
+                        "db:food-interactions/db:food-interaction", ns
+                    )
+                ]
+            )
+            if not food_interactions:
+                food_interactions = "None"
+
+            new_Drug = Drug(
+                name,
+                id,
+                type,
+                description,
+                form,
+                indication,
+                mechanism_of_action,
+                food_interactions,
+            )
+            drugs.append(new_Drug)
+
+        return drugs
