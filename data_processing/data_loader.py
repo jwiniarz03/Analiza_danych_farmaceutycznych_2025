@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 from typing import List
 from src.targets import Target, Polypeptide
 from src.drugs import Drug
+from src.products import Product
 
 
 def load_basic_drug_data(xml_file: str) -> dict[str : dict[str:str]]:
@@ -151,7 +152,7 @@ class DataLoader:
         self.xml_data = xml_data
 
     def parse_targets(self) -> List[Target]:
-        """Parse XML data and return a list of Target objects"""
+        """Parse XML data and return a list of Target objects."""
         tree = ET.parse(self.xml_data)
         root = tree.getroot()
 
@@ -199,7 +200,7 @@ class DataLoader:
         return targets
 
     def parse_drugs(self) -> List[Drug]:
-        """Parse XML data and return a list of Drug objects"""
+        """Parse XML data and return a list of Drug objects."""
 
         tree = ET.parse(self.xml_data)
         root = tree.getroot()
@@ -241,3 +242,42 @@ class DataLoader:
             drugs.append(new_Drug)
 
         return drugs
+
+    def parse_products(self) -> List[Product]:
+        """Parse XML Data and return a list of Product objects."""
+
+        tree = ET.parse(self.xml_data)
+        root = tree.getroot()
+
+        # Namespace handling for XML parsing
+        ns = {"db": "http://www.drugbank.ca"}
+
+        products = []
+
+        for drug in root.findall("db:drug", ns):
+            id = drug.find("db:drugbank-id[@primary='true']", ns).text
+            for product in drug.findall("db:products/db:product", ns):
+                name = product.find("db:name", ns).text
+                producer = product.find("db:labeller", ns).text
+                national_drug_code = product.find("db:ndc-product-code", ns).text
+                form = product.find("db:dosage-form", ns).text
+                method_of_application = product.find("db:route", ns).text
+                dose_information = product.find("db:strength", ns).text
+                country = product.find("db:country", ns).text
+                agency = product.find("db:source", ns).text
+
+                new_Product = Product(
+                    id,
+                    name,
+                    producer,
+                    national_drug_code,
+                    form,
+                    method_of_application,
+                    dose_information,
+                    country,
+                    agency,
+                )
+
+                products.append(new_Product)
+
+        return products
