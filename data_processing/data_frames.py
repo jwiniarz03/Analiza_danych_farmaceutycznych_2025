@@ -82,6 +82,7 @@ class UniversalDataFrame:
         self.data_loader = DataLoader(xml_file)
         self.targets = self.data_loader.parse_targets()
         self.drugs = self.data_loader.parse_drugs()
+        self.products = self.data_loader.parse_products()
 
     def create_targets_interactions_dataframe(self) -> pd.DataFrame:
         """Creates a DataFrame with targets interaction information."""
@@ -114,5 +115,13 @@ class UniversalDataFrame:
 
         drug_dicts = [drug.to_dict() for drug in self.drugs]
         df = pd.DataFrame(drug_dicts)
+
+        return df
+
+    def create_products_data_frame(self) -> pd.DataFrame:
+        """Creates a DataFrame with products information."""
+
+        products_dicts = [product.to_dict() for product in self.products]
+        df = pd.DataFrame(products_dicts)
 
         return df
