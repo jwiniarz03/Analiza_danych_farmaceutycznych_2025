@@ -81,6 +81,7 @@ class UniversalDataFrame:
     def __init__(self, xml_file: str):
         self.data_loader = DataLoader(xml_file)
         self.targets = self.data_loader.parse_targets()
+        self.drugs = self.data_loader.parse_drugs()
 
     def create_targets_interactions_dataframe(self) -> pd.DataFrame:
         """Creates a DataFrame with targets interaction information."""
@@ -107,3 +108,11 @@ class UniversalDataFrame:
             data["Cellular location"].append(polypeptide.cellular_location)
 
         return pd.DataFrame(data)
+
+    def create_drugs_basic_informations_df(self) -> pd.DataFrame:
+        """Creates a DataFrame with drugs basic information."""
+
+        drug_dicts = [drug.to_dict() for drug in self.drugs]
+        df = pd.DataFrame(drug_dicts)
+
+        return df
