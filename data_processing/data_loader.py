@@ -266,18 +266,18 @@ class DataLoader:
                 country = product.find("db:country", ns).text
                 agency = product.find("db:source", ns).text
 
-                new_Product = Product(
-                    id,
-                    name,
-                    producer,
-                    national_drug_code,
-                    form,
-                    method_of_application,
-                    dose_information,
-                    country,
-                    agency,
-                )
+            new_Product = Product(
+                id,
+                name,
+                producer,
+                national_drug_code,
+                form,
+                method_of_application,
+                dose_information,
+                country,
+                agency,
+            )
 
-                products.append(new_Product)
+            products.append(new_Product)
 
         return products
