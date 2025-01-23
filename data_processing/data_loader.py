@@ -3,6 +3,7 @@ from typing import List
 from src.targets import Target, Polypeptide
 from src.drugs import Drug
 from src.products import Product
+from src.pathways import Pathway
 
 
 def load_basic_drug_data(xml_file: str) -> dict[str : dict[str:str]]:
@@ -260,8 +261,8 @@ class DataLoader:
                 name = product.find("db:name", ns).text
                 producer = product.find("db:labeller", ns).text
                 national_drug_code = product.find("db:ndc-product-code", ns).text
-                form = product.find("db:dosage-form", ns).text
-                method_of_application = product.find("db:route", ns).text
+                form = product.find("db:route", ns).text  # check
+                method_of_application = product.find("db:dosage-form", ns).text
                 dose_information = product.find("db:strength", ns).text
                 country = product.find("db:country", ns).text
                 agency = product.find("db:source", ns).text
@@ -281,3 +282,40 @@ class DataLoader:
             products.append(new_Product)
 
         return products
+
+    def parse_pathways(self) -> List[Pathway]:
+        """Parse XML Data and returns a list of Pathway objects."""
+        tree = ET.parse(self.xml_data)
+        root = tree.getroot()
+
+        # Namespace handling for XML parsing
+        ns = {"db": "http://www.drugbank.ca"}
+
+        pathways = []
+
+        for drug in root.findall("db:drug", ns):
+            for pathway in drug.findall("db:pathways/db:pathway", ns):
+                pathway_id = pathway.find("db:smpdb-id", ns).text
+                pathway_name = pathway.find("db:name", ns).text
+                category = pathway.find("db:category", ns).text
+
+                drugs_list = [
+                    drug_elem.find("db:name", ns).text
+                    for drug_elem in pathway.findall("db:drugs/db:drug", ns)
+                ]
+
+                enzymes_list = [
+                    enzyme_elem.text
+                    for enzyme_elem in pathway.findall("db:enzymes/db:uniprot-id", ns)
+                ]
+
+                new_Pathway = Pathway(
+                    id=pathway_id,
+                    name=pathway_name,
+                    category=category,
+                    drugs=drugs_list,
+                    enzymes=enzymes_list,
+                )
+                pathways.append(new_Pathway)
+
+        return pathways
