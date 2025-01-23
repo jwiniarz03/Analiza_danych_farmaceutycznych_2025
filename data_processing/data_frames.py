@@ -137,3 +137,18 @@ class UniversalDataFrame:
         print(f"Całkowita liczba szkalów wynosi {count}.")
 
         return df
+
+    def create_synonyms_data_frame(self) -> pd.DataFrame:
+        """Creates a DataFrame containing DrugBank ID as primary key and its synonyms."""
+
+        data = [
+            {
+                "DrugBank ID": drug.drug_id,
+                "Synonyms": ", ".join(drug.synonyms) if drug.synonyms else "None",
+            }
+            for drug in self.drugs
+        ]
+
+        df = pd.DataFrame(data)
+
+        return df
