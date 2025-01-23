@@ -1,6 +1,5 @@
 import pandas as pd
 from data_processing.data_loader import DataLoader
-from src.targets import Target, Polypeptide
 
 
 def create_data_frame_basic_info(drugs_data: dict) -> pd.DataFrame:
@@ -83,6 +82,7 @@ class UniversalDataFrame:
         self.targets = self.data_loader.parse_targets()
         self.drugs = self.data_loader.parse_drugs()
         self.products = self.data_loader.parse_products()
+        self.pathways = self.data_loader.parse_pathways()
 
     def create_targets_interactions_dataframe(self) -> pd.DataFrame:
         """Creates a DataFrame with targets interaction information."""
@@ -123,5 +123,17 @@ class UniversalDataFrame:
 
         products_dicts = [product.to_dict() for product in self.products]
         df = pd.DataFrame(products_dicts)
+
+        return df
+
+    def create_pathways_data_frame(self) -> pd.DataFrame:
+        """Creates a DataFrame with pathways information."""
+
+        pathways_dicts = [pathway.to_dict() for pathway in self.pathways]
+        df = pd.DataFrame(pathways_dicts)
+
+        count = len(df)
+
+        print(f"Całkowita liczba szkalów wynosi {count}.")
 
         return df
