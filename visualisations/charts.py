@@ -40,7 +40,27 @@ def create_pie_plot_targets(df: pd.DataFrame) -> plt.pie:
     filtered_data = agregated_data[agregated_data["Percentage"] > 3]
     filtered_labels = filtered_data["Cellular location"]
 
-    plt.figure(figsize=(10, 8))
+    # fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(16, 8))
+
+    # wedges, texts, autotexts = ax[0].pie(
+    #     data,
+    #     labels=[
+    #         label if label in filtered_labels.values else "" for label in locations
+    #     ],
+    #     autopct=lambda p: f"{p:.1f}%" if p > 3 else "",
+    #     startangle=90,
+    # )
+    # ax[0].set_title("Distribution of Cellular Locations")
+
+    # ax[1].axis("off")
+    # ax[1].legend(
+    #     handles=wedges,
+    #     labels=locations,
+    #     title="Cellular Locations",
+    #     loc="upper left",
+    # )
+
+    plt.figure(figsize=(14, 8))
     plt.pie(
         data,
         labels=[
@@ -55,5 +75,8 @@ def create_pie_plot_targets(df: pd.DataFrame) -> plt.pie:
         title="Cellular Locations",
         loc="upper left",
         fontsize="small",
+        bbox_to_anchor=(1, 1),
+        handlelength=2.5,
     )
+    plt.tight_layout()
     plt.show()
