@@ -152,3 +152,21 @@ class UniversalDataFrame:
         df = pd.DataFrame(data)
 
         return df
+
+    def create_nr_of_pathways_data_frame(self) -> pd.DataFrame:
+        """Creates a DataFrame containing each DrugBank ID and its number of interactive pathways."""
+
+        count = {drug.name: 0 for drug in self.drugs}
+        for pathway in self.pathways:
+            for drug in pathway.drugs:
+                if drug in count:
+                    count[drug] += 1
+
+        df = pd.DataFrame(
+            {
+                "Drug": list(count.keys()),
+                "Nr_of_pathways": list(count.values()),
+            }
+        )
+
+        return df
