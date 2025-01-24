@@ -14,22 +14,21 @@ from data_processing.data_frames import (
     UniversalDataFrame,
 )
 from visualisations.graphs import (
-    generate_synonyms_graph,
-    plot_synonyms_graph,
+    generate_draw_synonyms_graph,
+)
+
+from visualisations.charts import (
+    plot_pathways_histogram,
 )
 
 if __name__ == "__main__":
 
     file_path = "drugbank_partial.xml"
-    drug_id = "DB00006"
+    drug_id = "DB00003"
 
     synonyms_data = load_drug_synonyms_data(file_path)
 
     synonyms_df = create_data_frame_synonyms(synonyms_data)
-
-    G = generate_synonyms_graph(drug_id, synonyms_df)
-
-    # plot_synonyms_graph(G, drug_id)
 
     path_drug_data = load_pathways_drugs_data(file_path)
 
@@ -48,6 +47,13 @@ if __name__ == "__main__":
     df_drugs = df_builder.create_drugs_basic_informations_df()
     df_products = df_builder.create_products_data_frame()
     df_pathways = df_builder.create_pathways_data_frame()
+    df_synonyms = df_builder.create_synonyms_data_frame()
+    df_nr_pathways = df_builder.create_nr_of_pathways_data_frame()
 
     # pie = create_pie_plot_targets(protein_df)
-    print(df_pathways)
+
+    # nx_graph = generate_draw_synonyms_graph(drug_id, drugs)
+
+    # histogram = plot_pathways_histogram(df_nr_pathways)
+
+    print(df_nr_pathways)
