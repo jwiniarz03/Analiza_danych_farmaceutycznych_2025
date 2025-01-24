@@ -2,65 +2,62 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import pandas as pd
 import textwrap
+from src.drugs import Drug
+from typing import List
 
 
-def generate_synonyms_graph(drug_id: str, synonyms_df: pd.DataFrame) -> nx.Graph:
+def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
     """
-    Generate a star graph of synonyms for given drug id.
+    Generate and draw a star graph of synonyms for a given DrugBank ID.
 
     Args:
-        drug_id (str): The DrugBank ID for which to generate the graph.
-        synonyms_data (pd.DataFrame): DataFrame containing drug ids and synonyms.
-
-    Returns:
-        nx.Graph: The generated star graph of synonyms.
-
-    Raises:
-        ValueError: If no synonyms are found for the given DrugBank ID.
+        drug_id (str): The DrugBank ID of a given drug.
+        drugs (List[Drug]): List of Drug objects with drug data.
     """
 
-    row = synonyms_df[synonyms_df["drug_id"] == drug_id]
+    drug = None
+    for d in drugs:
+        if d.drug_id == drug_id:
+            drug = d
+            break
 
-    if row.empty:
-        raise ValueError(f"No synonyms found for DrugBank ID {drug_id}")
+    if not drug:
+        raise ValueError(f"DrugBank ID {drug_id} not found.")
 
-    synonyms = row.iloc[0]["synonyms"].split("\n")
+    if not drug.synonyms:
+        raise ValueError(f"Drug with ID {drug_id} has no synonyms.")
 
     G = nx.Graph()
+    G.add_node(drug_id, label="DrugBank ID")
 
-    G.add_node(drug_id)
-
-    for synonym in synonyms:
-        G.add_node(synonym)
+    for synonym in drug.synonyms:
+        G.add_node(synonym, label="Synonym")
         G.add_edge(drug_id, synonym)
 
-    return G
+    plt.figure(figsize=(10, 8))
 
-
-def plot_synonyms_graph(G: nx.Graph, drug_id: str):
-    """
-    Generate matplotlib plot of synonyms for the given DrugBank ID.
-
-    Args:
-        G (nx.Graph): The graph to plot.
-        drug_id (str): The DrugBank ID of which the graph is generated.
-    """
-
-    plt.figure(figsize=(8, 6))
-
-    position = nx.spring_layout(G)
+    position = nx.spring_layout(G, seed=0)
+    nx.draw_networkx_nodes(
+        G, position, node_size=4000, node_color="lightblue", edgecolors="black"
+    )
     nx.draw_networkx_edges(G, position)
-    nx.draw_networkx_nodes(G, position, node_size=3000)
-
+    # nx.draw_networkx_labels(
+    #     G, position, font_size=10, font_color="black", font_weight="bold"
+    # )
     labels = {}
     for node in G.nodes:
-        wrapped_text = "\n".join(textwrap.wrap(node, width=20))
+        wrapped_text = "\n".join(textwrap.wrap(node, width=10))
         labels[node] = wrapped_text
     nx.draw_networkx_labels(
-        G, position, labels, font_size=6, font_color="white", verticalalignment="center"
+        G,
+        position,
+        labels,
+        font_size=10,
+        font_color="black",
+        verticalalignment="center",
     )
-
     plt.title(f"Star Graph for DrugBank ID: {drug_id}")
+
     plt.show()
 
 
