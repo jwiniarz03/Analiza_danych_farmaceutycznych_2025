@@ -17,7 +17,11 @@ from visualisations.graphs import (
     generate_draw_synonyms_graph,
 )
 
-from visualisations.charts import plot_pathways_histogram, create_pie_plot_targets
+from visualisations.charts import (
+    plot_pathways_histogram,
+    create_pie_plot_targets,
+    create_groups_pie_plot,
+)
 
 if __name__ == "__main__":
 
@@ -54,5 +58,7 @@ if __name__ == "__main__":
     # nx_graph = generate_draw_synonyms_graph(drug_id, drugs) --> mayby ok
 
     # histogram = plot_pathways_histogram(df_nr_pathways) --> i think ok
+
+    # gruoup_pie_plot = create_groups_pie_plot(df_groups_number) --> can be better
 
     print(df_groups_number)
