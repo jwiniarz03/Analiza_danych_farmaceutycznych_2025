@@ -181,4 +181,11 @@ class UniversalDataFrame:
         df_exploded = pd.DataFrame(drug_dicts).explode("Groups")
         df = df_exploded.groupby("Groups").size().reset_index(name="Count")
 
-        return df
+        approved_not_withdrawn_count = 0
+        for drug in self.drugs:
+            if "approved" in drug.groups:
+                if "withdrawn" not in drug.groups:
+                    approved_not_withdrawn_count += 1
+
+        g_count = f"Zatwierdzonych i nie wycofanych leków jest {approved_not_withdrawn_count}."
+        return df, g_count
