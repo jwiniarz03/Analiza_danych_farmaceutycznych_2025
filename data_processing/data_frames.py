@@ -75,6 +75,9 @@ def create_data_frame_path_drug(path_drug_data):
     return df[["Pathway", "Drug Name"]]
 
 
+# def create_drug_interactions_data_frame()
+
+
 class UniversalDataFrame:
 
     def __init__(self, xml_file: str):
@@ -134,9 +137,9 @@ class UniversalDataFrame:
 
         count = len(df)
 
-        print(f"Całkowita liczba szkalów wynosi {count}.")
+        p_count = f"Całkowita liczba szkalów wynosi {count}."
 
-        return df
+        return p_count, df
 
     def create_synonyms_data_frame(self) -> pd.DataFrame:
         """Creates a DataFrame containing DrugBank ID as primary key and its synonyms."""
@@ -168,5 +171,14 @@ class UniversalDataFrame:
                 "Nr_of_pathways": list(count.values()),
             }
         )
+
+        return df
+
+    def create_groups_data_frame(self) -> pd.DataFrame:
+        """Creates a DataFrame containing number of drugs in each drug group eg. investigational, approved."""
+
+        drug_dicts = [drug.to_dict() for drug in self.drugs]
+        df_exploded = pd.DataFrame(drug_dicts).explode("Groups")
+        df = df_exploded.groupby("Groups").size().reset_index(name="Count")
 
         return df
