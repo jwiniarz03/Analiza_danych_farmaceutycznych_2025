@@ -62,4 +62,4 @@ if __name__ == "__main__":
 
     # gruoup_pie_plot = create_groups_pie_plot(df_groups_number) --> can be better
 
-    print(df_drug_interactions)
+    print(df_drugs.head())

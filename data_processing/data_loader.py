@@ -220,18 +220,11 @@ class DataLoader:
             form = drug.find("db:state", ns).text
             indication = drug.find("db:indication", ns).text
             mechanism_of_action = drug.find("db:mechanism-of-action", ns).text
-            food_interactions = (
-                "\n".join(
-                    [
-                        food.text
-                        for food in drug.findall(
-                            "db:food-interactions/db:food-interaction", ns
-                        )
-                    ]
-                )
-                if drug.find("db:food-interactions", ns) is not None
-                else "None"
-            )
+            food_interactions = [
+                food.text
+                for food in drug.findall("db:food-interactions/db:food-interaction", ns)
+            ]
+
             for interaction in drug.findall(
                 "db:drug-interactions/db:drug-interaction", ns
             ):
@@ -251,7 +244,7 @@ class DataLoader:
                 form,
                 indication,
                 mechanism_of_action,
-                food_interactions,
+                food_interactions=food_interactions,
                 drug_interactions=drug_interactions,
                 synonyms=synonyms,
                 groups=groups,

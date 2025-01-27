@@ -114,7 +114,18 @@ class UniversalDataFrame:
         """Creates a DataFrame with drugs basic information."""
 
         drug_dicts = [drug.to_dict() for drug in self.drugs]
-        df = pd.DataFrame(drug_dicts)
+        selected_columns = [
+            "DrugBank ID",
+            "Name",
+            "Type",
+            "Description",
+            "Form",
+            "Indications",
+            "Mechanism_of_action",
+            "Food_interactions",
+        ]
+        basic_df = pd.DataFrame(drug_dicts)
+        df = basic_df[selected_columns]
 
         return df
 

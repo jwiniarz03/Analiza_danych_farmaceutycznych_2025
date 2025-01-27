@@ -12,8 +12,8 @@ class Drug:
         state: str,
         indication: str,
         mechanism_of_action: str,
-        food_interactions: str,
         drug_interactions: List[dict],
+        food_interactions: List[str] = None,
         synonyms: List[str] = None,
         groups: List[str] = None,
     ):
@@ -24,10 +24,10 @@ class Drug:
         self.state = state
         self.indication = indication
         self.mechanism_of_action = mechanism_of_action
-        self.food_interactions = food_interactions
         self.drug_interactions = drug_interactions
-        self.synonyms = synonyms if synonyms else []
-        self.groups = groups if groups else []
+        self.food_interactions = food_interactions if food_interactions else ["None"]
+        self.synonyms = synonyms if synonyms else ["None"]
+        self.groups = groups if groups else ["None"]
 
     def to_dict(self) -> dict:
         return {
