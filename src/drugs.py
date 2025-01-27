@@ -13,7 +13,7 @@ class Drug:
         indication: str,
         mechanism_of_action: str,
         food_interactions: str,
-        drug_interactions: List[dict[str:str]],
+        drug_interactions: List[dict],
         synonyms: List[str] = None,
         groups: List[str] = None,
     ):

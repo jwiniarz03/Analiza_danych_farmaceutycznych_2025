@@ -210,6 +210,7 @@ class DataLoader:
         ns = {"db": "http://www.drugbank.ca"}
 
         drugs = []
+        drug_interactions = []
 
         for drug in root.findall("db:drug", ns):
             id = drug.find("db:drugbank-id[@primary='true']", ns).text
@@ -231,6 +232,12 @@ class DataLoader:
                 if drug.find("db:food-interactions", ns) is not None
                 else "None"
             )
+            for interaction in drug.findall(
+                "db:drug-interactions/db:drug-interaction", ns
+            ):
+                target_name = interaction.find("db:name", ns).text
+                interaction_description = interaction.find("db:description", ns).text
+                drug_interactions.append({target_name: interaction_description})
             synonyms = [
                 synonym.text for synonym in drug.findall("db:synonyms/db:synonym", ns)
             ]
@@ -245,6 +252,7 @@ class DataLoader:
                 indication,
                 mechanism_of_action,
                 food_interactions,
+                drug_interactions=drug_interactions,
                 synonyms=synonyms,
                 groups=groups,
             )

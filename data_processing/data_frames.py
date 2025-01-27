@@ -75,9 +75,6 @@ def create_data_frame_path_drug(path_drug_data):
     return df[["Pathway", "Drug Name"]]
 
 
-# def create_drug_interactions_data_frame()
-
-
 class UniversalDataFrame:
 
     def __init__(self, xml_file: str):
@@ -189,3 +186,25 @@ class UniversalDataFrame:
 
         g_count = f"Zatwierdzonych i nie wycofanych leków jest {approved_not_withdrawn_count}."
         return df, g_count
+
+    def create_drug_interactions_data_frame(self) -> pd.DataFrame:
+        """Creates a DataFRame with drug names and their drug interactions: drug names and description."""
+
+        data = {
+            "DrugBank ID": [],
+            "Drug Name": [],
+            "Target Name": [],
+            "Interaction Description": [],
+        }
+
+        for drug in self.drugs:
+            for interaction in drug.drug_interactions:
+                for target_name, description in interaction.items():
+                    data["DrugBank ID"].append(drug.drug_id)
+                    data["Drug Name"].append(drug.name)
+                    data["Target Name"].append(target_name)
+                    data["Interaction Description"].append(description)
+
+        df = pd.DataFrame(data)
+
+        return df
