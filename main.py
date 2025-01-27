@@ -17,9 +17,7 @@ from visualisations.graphs import (
     generate_draw_synonyms_graph,
 )
 
-from visualisations.charts import (
-    plot_pathways_histogram,
-)
+from visualisations.charts import plot_pathways_histogram, create_pie_plot_targets
 
 if __name__ == "__main__":
 
@@ -49,11 +47,12 @@ if __name__ == "__main__":
     df_pathways = df_builder.create_pathways_data_frame()
     df_synonyms = df_builder.create_synonyms_data_frame()
     df_nr_pathways = df_builder.create_nr_of_pathways_data_frame()
+    df_groups_number = df_builder.create_groups_data_frame()
 
-    # pie = create_pie_plot_targets(protein_df)
+    # pie = create_pie_plot_targets(protein_df) --> to do
 
-    # nx_graph = generate_draw_synonyms_graph(drug_id, drugs)
+    # nx_graph = generate_draw_synonyms_graph(drug_id, drugs) --> mayby ok
 
-    # histogram = plot_pathways_histogram(df_nr_pathways)
+    # histogram = plot_pathways_histogram(df_nr_pathways) --> i think ok
 
-    print(df_nr_pathways)
+    print(df_groups_number)
