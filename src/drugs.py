@@ -13,6 +13,7 @@ class Drug:
         indication: str,
         mechanism_of_action: str,
         food_interactions: str,
+        drug_interactions: List[dict[str:str]],
         synonyms: List[str] = None,
         groups: List[str] = None,
     ):
@@ -24,6 +25,7 @@ class Drug:
         self.indication = indication
         self.mechanism_of_action = mechanism_of_action
         self.food_interactions = food_interactions
+        self.drug_interactions = drug_interactions
         self.synonyms = synonyms if synonyms else []
         self.groups = groups if groups else []
 
@@ -37,6 +39,7 @@ class Drug:
             "Indications": self.indication,
             "Mechanism_of_action": self.mechanism_of_action,
             "Food_interactions": self.food_interactions,
+            "Drug interactions": self.drug_interactions,
             "Synonyms": self.synonyms,
             "Groups": self.groups,
         }
