@@ -38,7 +38,7 @@ def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
 
     position = nx.spring_layout(G, seed=0)
     nx.draw_networkx_nodes(
-        G, position, node_size=4000, node_color="lightblue", edgecolors="black"
+        G, position, node_size=5000, node_color="lightblue", edgecolors="black"
     )
     nx.draw_networkx_edges(G, position)
     # nx.draw_networkx_labels(
