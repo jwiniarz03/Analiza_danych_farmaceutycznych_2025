@@ -234,6 +234,7 @@ class DataLoader:
             synonyms = [
                 synonym.text for synonym in drug.findall("db:synonyms/db:synonym", ns)
             ]
+            groups = [group.text for group in drug.findall("db:groups/db:group", ns)]
 
             new_Drug = Drug(
                 name,
@@ -245,6 +246,7 @@ class DataLoader:
                 mechanism_of_action,
                 food_interactions,
                 synonyms=synonyms,
+                groups=groups,
             )
             drugs.append(new_Drug)
 
