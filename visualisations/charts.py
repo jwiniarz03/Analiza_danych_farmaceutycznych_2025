@@ -24,7 +24,7 @@ def plot_pathways_histogram(df: pd.DataFrame):
     plt.show()
 
 
-def create_pie_plot_targets(df: pd.DataFrame) -> plt.pie:
+def create_pie_plot_targets(df: pd.DataFrame):
     agregated_data = (
         df.groupby("Cellular location")
         .agg(nr_of_targets=("DrugBank ID", "count"))
@@ -78,5 +78,28 @@ def create_pie_plot_targets(df: pd.DataFrame) -> plt.pie:
         bbox_to_anchor=(1, 1),
         handlelength=2.5,
     )
+    plt.tight_layout()
+    plt.show()
+
+
+def create_groups_pie_plot(df: pd.DataFrame):
+    """
+    Creates a pie plot showing distribution of durg groups.
+
+    Args:
+        df (pd.DataFrame): DataFrame with drug group and count of drugs in them
+
+    Returns:
+        None
+    """
+
+    plt.figure(figsize=(8, 8))
+    plt.pie(
+        df["Count"],
+        labels=df["Groups"],
+        startangle=180,
+        wedgeprops={"edgecolor": "black", "linewidth": 1},
+    )
+    plt.title("Distribution of Drug Groups")
     plt.tight_layout()
     plt.show()
