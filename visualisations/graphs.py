@@ -61,63 +61,105 @@ def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
     plt.show()
 
 
-class BipartiteGraph:
-    def __init__(self):
-        """
-        Initialize the bipartite graph with two sets of vertices and an adjacency list.
-        """
-        self.P = set()  # First set of vertices --> Pathways
-        self.D = set()  # Second set of vertices --> Drugs
-        self.adj_list = {}  # Adjacency list to store edges
+# class BipartiteGraph:
+#     def __init__(self):
+#         """
+#         Initialize the bipartite graph with two sets of vertices and an adjacency list.
+#         """
+#         self.P = set()  # First set of vertices --> Pathways
+#         self.D = set()  # Second set of vertices --> Drugs
+#         self.adj_list = {}  # Adjacency list to store edges
 
-    def add_vertex(self, vertex, set_type):
+#     def add_vertex(self, vertex, set_type):
 
-        if set_type == "P":
-            self.P.add(vertex)
-        elif set_type == "D":
-            self.D.add(vertex)
-        else:
-            raise ValueError("set_type must be either 'U' or 'V'")
-        # Initialize the adjacency list for the new vertex
-        self.adj_list[vertex] = []
+#         if set_type == "P":
+#             self.P.add(vertex)
+#         elif set_type == "D":
+#             self.D.add(vertex)
+#         else:
+#             raise ValueError("set_type must be either 'P' or 'D'")
+#         # Initialize the adjacency list for the new vertex
+#         self.adj_list[vertex] = []
 
-    def add_edge(self, p, d):
-        if (p in self.P and d in self.D) or (p in self.D and d in self.P):
-            self.adj_list[p].append(d)
-            self.adj_list[d].append(p)
-        else:
-            raise ValueError("Edge must connect vertices from different sets")
+#     def add_edge(self, p, d):
+#         if (p in self.P and d in self.D) or (p in self.D and d in self.P):
+#             self.adj_list[p].append(d)
+#             self.adj_list[d].append(p)
+#         else:
+#             raise ValueError("Edge must connect vertices from different sets")
 
-    def is_bipartite(self):
-        color = {}
-        for vertex in list(self.U) + list(self.V):
-            if vertex not in color:
-                if not self._bfs_check(vertex, color):
-                    return False
-        return True
+#     def is_bipartite(self):
+#         color = {}
+#         for vertex in list(self.P) + list(self.D):
+#             if vertex not in color:
+#                 if not self._bfs_check(vertex, color):
+#                     return False
+#         return True
 
-    def _bfs_check(self, start, color):
-        from collections import deque
+#     def _bfs_check(self, start, color):
+#         from collections import deque
 
-        queue = deque([start])
-        color[start] = 0  # Start coloring with color 0
+#         queue = deque([start])
+#         color[start] = 0  # Start coloring with color 0
 
-        while queue:
-            vertex = queue.popleft()
-            current_color = color[vertex]
+#         while queue:
+#             vertex = queue.popleft()
+#             current_color = color[vertex]
 
-            for neighbor in self.adj_list[vertex]:
-                if neighbor not in color:
-                    color[neighbor] = 1 - current_color  # Alternate color
-                    queue.append(neighbor)
-                elif color[neighbor] == current_color:
-                    return False
+#             for neighbor in self.adj_list[vertex]:
+#                 if neighbor not in color:
+#                     color[neighbor] = 1 - current_color  # Alternate color
+#                     queue.append(neighbor)
+#                 elif color[neighbor] == current_color:
+#                     return False
 
-        return True
+#         return True
 
-    def display(self):
-        print("Set P:", self.P)
-        print("Set D:", self.D)
-        print("Adjacency List:")
-        for vertex, neighbors in self.adj_list.items():
-            print(f"{vertex}: {neighbors}")
+#     def display(self):
+#         print("Set P:", self.P)
+#         print("Set D:", self.D)
+#         print("Adjacency List:")
+#         for vertex, neighbors in self.adj_list.items():
+#             print(f"{vertex}: {neighbors}")
+
+
+def create_pathways_bipartite_graph(df: pd.DataFrame):
+    B = nx.Graph()
+
+    # Dodawanie węzłów pathways i drugs
+    pathways = df["Name"].unique()
+    drugs = df["Drugs"].unique()
+
+    B.add_nodes_from(pathways, bipartite=0, color="skyblue")
+    B.add_nodes_from(drugs, bipartite=1, color="pink")
+
+    edges = [(row["Name"], row["Drugs"]) for _, row in df.iterrows()]
+    B.add_edges_from(edges)
+
+    pos = nx.bipartite_layout(B, pathways)
+
+    labels = {}
+    for node in B.nodes:
+        wrapped_text = "\n".join(textwrap.wrap(node, width=13))
+        labels[node] = wrapped_text
+
+    plt.figure(figsize=(12, 10))
+    node_colors = [B.nodes[node]["color"] for node in B.nodes]
+
+    nx.draw_networkx(
+        B,
+        pos,
+        labels=labels,
+        with_labels=True,
+        node_size=1200,
+        node_color=node_colors,
+        font_size=5,
+        edge_color="gray",
+        font_weight="bold",
+        node_shape="s",
+    )
+
+    plt.title("Pathways and Drug Interactions Bipartite Graph")
+    plt.axis("off")
+    plt.tight_layout()
+    plt.show()
