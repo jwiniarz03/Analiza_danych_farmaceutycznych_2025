@@ -147,7 +147,7 @@ class UniversalDataFrame:
 
         p_count = f"Całkowita liczba szkalów wynosi {count}."
 
-        return p_count, df
+        return df
 
     def create_synonyms_data_frame(self) -> pd.DataFrame:
         """Creates a DataFrame containing DrugBank ID as primary key and its synonyms."""
@@ -199,7 +199,7 @@ class UniversalDataFrame:
         return df, g_count
 
     def create_drug_interactions_data_frame(self) -> pd.DataFrame:
-        """Creates a DataFRame with drug names and their drug interactions: drug names and description."""
+        """Creates a DataFrame with drug names and their drug interactions: drug names and description."""
 
         data = {
             "DrugBank ID": [],
@@ -217,5 +217,15 @@ class UniversalDataFrame:
                     data["Interaction Description"].append(description)
 
         df = pd.DataFrame(data)
+
+        return df
+
+    def create_pathway_interactions_data_frame(self) -> pd.DataFrame:
+        """Creates a DataFrame with pathways ids and names with drugs they interact with."""
+
+        pathways_dict = [pathway.to_dict() for pathway in self.pathways]
+        dataframe = pd.DataFrame(pathways_dict)
+        selected_columns = ["Path_ID", "Name", "Drugs"]
+        df = dataframe[selected_columns].explode("Drugs").reset_index(drop=True)
 
         return df

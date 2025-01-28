@@ -15,6 +15,7 @@ from data_processing.data_frames import (
 )
 from visualisations.graphs import (
     generate_draw_synonyms_graph,
+    create_pathways_bipartite_graph,
 )
 
 from visualisations.charts import (
@@ -26,17 +27,7 @@ from visualisations.charts import (
 if __name__ == "__main__":
 
     file_path = "drugbank_partial.xml"
-    drug_id = "DB00003"
-
-    synonyms_data = load_drug_synonyms_data(file_path)
-
-    synonyms_df = create_data_frame_synonyms(synonyms_data)
-
-    path_drug_data = load_pathways_drugs_data(file_path)
-
-    pathways_df = create_data_frame_pathways(path_drug_data)
-
-    path_drug_df = create_data_frame_path_drug(path_drug_data)
+    drug_id = "DB00047"
 
     data_loader = DataLoader(file_path)
     targets = data_loader.parse_targets()
@@ -53,13 +44,16 @@ if __name__ == "__main__":
     df_nr_pathways = df_builder.create_nr_of_pathways_data_frame()
     df_groups_number = df_builder.create_groups_data_frame()
     df_drug_interactions = df_builder.create_drug_interactions_data_frame()
+    df_pathways_interactions = df_builder.create_pathway_interactions_data_frame()
 
     # pie = create_pie_plot_targets(protein_df) --> to do
 
-    # nx_graph = generate_draw_synonyms_graph(drug_id, drugs) --> mayby ok
+    # nx_graph = generate_draw_synonyms_graph(drug_id, drugs)  # --> mayby ok
 
     # histogram = plot_pathways_histogram(df_nr_pathways) --> i think ok
 
     # gruoup_pie_plot = create_groups_pie_plot(df_groups_number) --> can be better
 
-    print(df_drugs.head())
+    # bipartite_graph = create_pathways_bipartite_graph(df_pathways_interactions) --> i think it cant be better xd
+
+    print(df_pathways_interactions)

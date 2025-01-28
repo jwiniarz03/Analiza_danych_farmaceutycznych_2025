@@ -301,6 +301,7 @@ class DataLoader:
         ns = {"db": "http://www.drugbank.ca"}
 
         pathways = []
+        drugs_list = []
 
         for drug in root.findall("db:drug", ns):
             for pathway in drug.findall("db:pathways/db:pathway", ns):
