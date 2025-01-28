@@ -196,7 +196,8 @@ class UniversalDataFrame:
                     approved_not_withdrawn_count += 1
 
         g_count = f"Zatwierdzonych i nie wycofanych leków jest {approved_not_withdrawn_count}."
-        return df, g_count
+        # todo gdzie to wyswietlic
+        return df
 
     def create_drug_interactions_data_frame(self) -> pd.DataFrame:
         """Creates a DataFrame with drug names and their drug interactions: drug names and description."""

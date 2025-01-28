@@ -61,14 +61,14 @@ def create_pie_plot_targets(df: pd.DataFrame):
         autopct=lambda p: f"{p:.1f}%" if p > 3 else "",
         startangle=90,
     )
-    plt.title("Distribution of Cellular Locations")
+    plt.title("Distribution of Cellular Locations", fontsize=12, fontweight="bold")
     plt.legend(
         locations,
         title="Cellular Locations",
         loc="upper left",
         fontsize="small",
-        bbox_to_anchor=(1, 1),
-        handlelength=2.5,
+        bbox_to_anchor=(1.0, 1.15),
+        handlelength=2.0,
     )
     plt.tight_layout()
     plt.show()
