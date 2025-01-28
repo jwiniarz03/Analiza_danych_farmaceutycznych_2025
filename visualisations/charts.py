@@ -13,13 +13,25 @@ def plot_pathways_histogram(df: pd.DataFrame):
     if df.empty:
         raise ValueError("Given DataFrame is empty. No data to plot.")
 
-    plt.figure(figsize=(18, 8))
-    plt.bar(df["Drug"], df["Nr_of_pathways"], color="green")
-    plt.xlabel("Drug", fontsize=12, fontweight="bold")
-    plt.ylabel("Number of Pathways", fontsize=12, fontweight="bold")
+    # wersja pionowa
+    # plt.figure(figsize=(18, 8))
+    # plt.bar(df["Drug"], df["Nr_of_pathways"], color="green")
+    # plt.xlabel("Drug", fontsize=12, fontweight="bold")
+    # plt.ylabel("Number of Pathways", fontsize=12, fontweight="bold")
+    # plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
+    # plt.xticks(rotation=90, fontsize=8, fontweight="bold", ha="center")
+    # plt.xlim(-0.5, len(df["Drug"]) - 0.5)
+    # plt.tight_layout()
+    # plt.show()
+
+    # wersja pozioma
+    plt.figure(figsize=(8, 8))
+    plt.barh(df["Drug"], df["Nr_of_pathways"], color="pink")
+    plt.ylabel("Drug", fontsize=12, fontweight="bold")
+    plt.xlabel("Number of Pathways", fontsize=12, fontweight="bold")
     plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
-    plt.xticks(rotation=90, fontsize=8, fontweight="bold", ha="center")
-    plt.xlim(-0.5, len(df["Drug"]) - 0.5)
+    plt.yticks(fontsize=5, fontweight="bold")
+    plt.ylim(-0.5, len(df["Drug"]) - 0.5)
     plt.tight_layout()
     plt.show()
 
@@ -39,26 +51,6 @@ def create_pie_plot_targets(df: pd.DataFrame):
     locations = agregated_data["Cellular location"]
     filtered_data = agregated_data[agregated_data["Percentage"] > 3]
     filtered_labels = filtered_data["Cellular location"]
-
-    # fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(16, 8))
-
-    # wedges, texts, autotexts = ax[0].pie(
-    #     data,
-    #     labels=[
-    #         label if label in filtered_labels.values else "" for label in locations
-    #     ],
-    #     autopct=lambda p: f"{p:.1f}%" if p > 3 else "",
-    #     startangle=90,
-    # )
-    # ax[0].set_title("Distribution of Cellular Locations")
-
-    # ax[1].axis("off")
-    # ax[1].legend(
-    #     handles=wedges,
-    #     labels=locations,
-    #     title="Cellular Locations",
-    #     loc="upper left",
-    # )
 
     plt.figure(figsize=(14, 8))
     plt.pie(
