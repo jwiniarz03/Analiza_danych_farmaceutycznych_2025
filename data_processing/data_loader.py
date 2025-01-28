@@ -177,9 +177,8 @@ class DataLoader:
                     "db:external-identifiers/db:external-identifier", ns
                 ):
                     resource = ext_id.find("db:resource", ns).text
-                    identifier = ext_id.find("db:identifier", ns).text
                     if resource == "GenAtlas":
-                        genatlas_id = identifier
+                        genatlas_id = ext_id.find("db:identifier", ns).text
 
                 polypeptide = Polypeptide(
                     id=polypeptide_general.attrib["id"],
