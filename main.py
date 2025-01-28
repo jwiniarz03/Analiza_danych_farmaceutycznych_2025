@@ -52,8 +52,8 @@ if __name__ == "__main__":
 
     # histogram = plot_pathways_histogram(df_nr_pathways)  # --> i think ok
 
-    gruoup_pie_plot = create_groups_pie_plot(df_groups_number)  #  --> can be better
+    # gruoup_pie_plot = create_groups_pie_plot(df_groups_number)  #  --> can be better
 
     # bipartite_graph = create_pathways_bipartite_graph(df_pathways_interactions) --> i think it cant be better xd
 
-    print(df_groups_number)
+    print(df_drug_interactions)

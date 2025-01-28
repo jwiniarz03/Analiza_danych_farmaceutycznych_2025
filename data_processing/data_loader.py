@@ -227,9 +227,9 @@ class DataLoader:
             for interaction in drug.findall(
                 "db:drug-interactions/db:drug-interaction", ns
             ):
-                target_name = interaction.find("db:name", ns).text
+                drug_name = interaction.find("db:name", ns).text
                 interaction_description = interaction.find("db:description", ns).text
-                drug_interactions.append({target_name: interaction_description})
+                drug_interactions.append({drug_name: interaction_description})
             synonyms = [
                 synonym.text for synonym in drug.findall("db:synonyms/db:synonym", ns)
             ]

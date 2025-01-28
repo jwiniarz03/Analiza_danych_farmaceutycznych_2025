@@ -205,7 +205,7 @@ class UniversalDataFrame:
         data = {
             "DrugBank ID": [],
             "Drug Name": [],
-            "Target Name": [],
+            "Drug2 Name": [],
             "Interaction Description": [],
         }
 
