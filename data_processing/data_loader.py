@@ -277,45 +277,6 @@ class DataLoader:
 
         return drugs
 
-        # def parse_products(self) -> List[Product]:
-        #     """Parse XML Data and return a list of Product objects."""
-
-        #     tree = ET.parse(self.xml_data)
-        #     root = tree.getroot()
-
-        #     # Namespace handling for XML parsing
-        #     ns = {"db": "http://www.drugbank.ca"}
-
-        #     products = []
-
-        #     for drug in root.findall("db:drug", ns):
-        #         id = drug.find("db:drugbank-id[@primary='true']", ns).text
-        #         for product in drug.findall("db:products/db:product", ns):
-        #             name = product.find("db:name", ns).text
-        #             producer = product.find("db:labeller", ns).text
-        #             national_drug_code = product.find("db:ndc-product-code", ns).text
-        #             form = product.find("db:dosage-form", ns).text
-        #             method_of_application = product.find("db:route", ns).text
-        #             dose_information = product.find("db:strength", ns).text
-        #             country = product.find("db:country", ns).text
-        #             agency = product.find("db:source", ns).text
-
-        #         new_Product = Product(
-        #             id,
-        #             name,
-        #             producer,
-        #             national_drug_code,
-        #             form,
-        #             method_of_application,
-        #             dose_information,
-        #             country,
-        #             agency,
-        #         )
-
-        #         products.append(new_Product)
-
-        #     return products
-
     def parse_pathways(self) -> List[Pathway]:
         """Parse XML Data and returns a list of Pathway objects."""
         tree = ET.parse(self.xml_data)
