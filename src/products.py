@@ -2,7 +2,6 @@ class Product:
 
     def __init__(
         self,
-        id: str,
         name: str,
         producer: str,
         ndc: str,
@@ -12,7 +11,6 @@ class Product:
         country: str,
         agency: str,
     ):
-        self.id = id
         self.name = name
         self.producer = producer
         self.ndc = ndc
@@ -24,7 +22,6 @@ class Product:
 
     def to_dict(self) -> dict:
         return {
-            "Drug ID": self.id,
             "Product name": self.name,
             "Producer": self.producer,
             "National Drug Code": self.ndc,
@@ -34,3 +31,31 @@ class Product:
             "Country": self.country,
             "Agency": self.agency,
         }
+
+    def __eq__(self, other):
+        if not isinstance(other, Product):
+            return False
+        return (
+            self.name == other.name
+            and self.producer == other.producer
+            and self.ndc == other.ndc
+            and self.form == other.form
+            and self.application == other.application
+            and self.dosage == other.dosage
+            and self.country == other.country
+            and self.agency == other.agency
+        )
+
+    def __hash__(self):
+        return hash(
+            (
+                self.name,
+                self.producer,
+                self.ndc,
+                self.form,
+                self.application,
+                self.dosage,
+                self.country,
+                self.agency,
+            )
+        )
