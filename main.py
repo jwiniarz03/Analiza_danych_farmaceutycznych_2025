@@ -45,15 +45,19 @@ if __name__ == "__main__":
     df_groups_number = df_builder.create_groups_data_frame()
     df_drug_interactions = df_builder.create_drug_interactions_data_frame()
     df_pathways_interactions = df_builder.create_pathway_interactions_data_frame()
+    df_all_pathways_nr = df_builder.create_all_pathways_nr_data_frame(
+        df_pathways_interactions
+    )
 
     # pie = create_pie_plot_targets(protein_df)  # --> to do
 
     # nx_graph = generate_draw_synonyms_graph(drug_id, drugs)  # --> mayby ok
 
     # histogram = plot_pathways_histogram(df_nr_pathways)  # --> i think ok
+    # histogram_all = plot_pathways_histogram(df_all_pathways_nr)
 
-    # gruoup_pie_plot = create_groups_pie_plot(df_groups_number)  #  --> can be better
+    # gruoup_pie_plot = create_groups_pie_plot( df_groups_number, df_drugs)  #  --> can be better
 
-    # bipartite_graph = create_pathways_bipartite_graph(df_pathways_interactions) --> i think it cant be better xd
+    # bipartite_graph = create_pathways_bipartite_graph(df_pathways_interactions) # --> i think it cant be better xd
 
     print(df_drug_interactions)

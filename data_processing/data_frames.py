@@ -164,10 +164,11 @@ class UniversalDataFrame:
 
         return df
 
+    # only for drugs in shorter xml_file
     def create_nr_of_pathways_data_frame(self) -> pd.DataFrame:
-        """Creates a DataFrame containing each DrugBank ID and its number of interactive pathways."""
+        """Creates a DataFrame containing each DrugBank ID(from shorter database) and its number of interactive pathways."""
 
-        count = {drug.name: 0 for drug in self.drugs}
+        count = {drug.drug_id: 0 for drug in self.drugs}
         for pathway in self.pathways:
             for drug in pathway.drugs:
                 if drug in count:
@@ -175,12 +176,20 @@ class UniversalDataFrame:
 
         df = pd.DataFrame(
             {
-                "Drug": list(count.keys()),
+                "DrugBank_ID": list(count.keys()),
                 "Nr_of_pathways": list(count.values()),
             }
         )
 
         return df
+
+    def create_all_pathways_nr_data_frame(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Creates a DataFrame containing each DrugBank ID and its number of interactive pathways."""
+
+        drug_counts = df["Drugs"].value_counts().reset_index()
+        drug_counts.columns = ["DrugBank_ID", "Nr_of_pathways"]
+
+        return drug_counts
 
     def create_groups_data_frame(self) -> pd.DataFrame:
         """Creates a DataFrame containing number of drugs in each drug group eg. investigational, approved."""
@@ -205,7 +214,7 @@ class UniversalDataFrame:
         data = {
             "DrugBank ID": [],
             "Drug Name": [],
-            "Drug2 Name": [],
+            "Target Name": [],
             "Interaction Description": [],
         }
 
@@ -226,7 +235,7 @@ class UniversalDataFrame:
 
         pathways_dict = [pathway.to_dict() for pathway in self.pathways]
         dataframe = pd.DataFrame(pathways_dict)
-        selected_columns = ["Path_ID", "Name", "Drugs"]
+        selected_columns = ["Pathway_ID", "Name", "Drugs"]
         df = dataframe[selected_columns].explode("Drugs").reset_index(drop=True)
 
         return df

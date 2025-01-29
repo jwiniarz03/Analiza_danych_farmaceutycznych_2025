@@ -15,23 +15,23 @@ def plot_pathways_histogram(df: pd.DataFrame):
 
     # wersja pionowa
     # plt.figure(figsize=(18, 8))
-    # plt.bar(df["Drug"], df["Nr_of_pathways"], color="green")
-    # plt.xlabel("Drug", fontsize=12, fontweight="bold")
+    # plt.bar(df["DrugBank_ID"], df["Nr_of_pathways"], color="green")
+    # plt.xlabel("DrugBank ID", fontsize=12, fontweight="bold")
     # plt.ylabel("Number of Pathways", fontsize=12, fontweight="bold")
     # plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
     # plt.xticks(rotation=90, fontsize=8, fontweight="bold", ha="center")
-    # plt.xlim(-0.5, len(df["Drug"]) - 0.5)
+    # plt.xlim(-0.5, len(df["DrugBank_ID"]) - 0.5)
     # plt.tight_layout()
     # plt.show()
 
     # wersja pozioma
     plt.figure(figsize=(8, 8))
-    plt.barh(df["Drug"], df["Nr_of_pathways"], color="pink")
-    plt.ylabel("Drug", fontsize=12, fontweight="bold")
+    plt.barh(df["DrugBank_ID"], df["Nr_of_pathways"], color="pink")
+    plt.ylabel("DrugBank ID", fontsize=12, fontweight="bold")
     plt.xlabel("Number of Pathways", fontsize=12, fontweight="bold")
     plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
     plt.yticks(fontsize=5, fontweight="bold")
-    plt.ylim(-0.5, len(df["Drug"]) - 0.5)
+    plt.ylim(-0.5, len(df["DrugBank_ID"]) - 0.5)
     plt.tight_layout()
     plt.show()
 
@@ -74,24 +74,54 @@ def create_pie_plot_targets(df: pd.DataFrame):
     plt.show()
 
 
-def create_groups_pie_plot(df: pd.DataFrame):
+def create_groups_pie_plot(df: pd.DataFrame, df_drugs: pd.DataFrame):
     """
-    Creates a pie plot showing distribution of durg groups.
+    Creates separate pie charts for each drug group, showing its proportion of the total unique drugs.
 
     Args:
-        df (pd.DataFrame): DataFrame with drug group and count of drugs in them
+        df (pd.DataFrame): DataFrame with drug groups and the count of drugs in each group.
+        df_drugs (pd.DataFrame): DataFrame containing unique drugs.
 
     Returns:
         None
     """
 
-    plt.figure(figsize=(8, 8))
-    plt.pie(
-        df["Count"],
-        labels=df["Groups"],
-        startangle=180,
-        wedgeprops={"edgecolor": "black", "linewidth": 1},
-    )
-    plt.title("Distribution of Drug Groups")
+    # plt.figure(figsize=(8, 8))
+    # plt.pie(
+    #     df["Count"],
+    #     labels=df["Groups"],
+    #     startangle=180,
+    #     wedgeprops={"edgecolor": "black", "linewidth": 1},
+    # )
+    # plt.title("Distribution of Drug Groups")
+    # plt.tight_layout()
+    # plt.show()
+
+    total_unique_drugs = len(df_drugs)
+
+    num_plots = len(df)
+    ncols = 3
+    nrows = (num_plots + ncols - 1) // ncols
+
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(5 * ncols, 4 * nrows))
+    if num_plots == 1:
+        axes = [axes]
+
+    for ax, (group, count) in zip(axes.flat, zip(df["Groups"], df["Count"])):
+        sizes = [count, total_unique_drugs - count]
+        labels = [group, "others"]
+
+        ax.pie(
+            sizes,
+            labels=labels,
+            autopct="%1.1f%%",
+            textprops={"fontsize": 8},
+            startangle=180,
+        )
+        ax.set_title(f"Proportion of {group} drugs", fontsize=10)
+
+    for ax in axes.flat[num_plots:]:
+        ax.axis("off")
+
     plt.tight_layout()
     plt.show()

@@ -20,7 +20,7 @@ class Pathway:
 
     def to_dict(self) -> dict:
         return {
-            "Path_ID": self.id,
+            "Pathway_ID": self.id,
             "Name": self.name,
             "Category": self.category,
             "Drugs": self.drugs,

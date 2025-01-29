@@ -4,6 +4,7 @@ import pandas as pd
 import textwrap
 from src.drugs import Drug
 from typing import List
+from src.targets import Polypeptide
 
 
 def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
@@ -61,79 +62,16 @@ def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
     plt.show()
 
 
-# class BipartiteGraph:
-#     def __init__(self):
-#         """
-#         Initialize the bipartite graph with two sets of vertices and an adjacency list.
-#         """
-#         self.P = set()  # First set of vertices --> Pathways
-#         self.D = set()  # Second set of vertices --> Drugs
-#         self.adj_list = {}  # Adjacency list to store edges
-
-#     def add_vertex(self, vertex, set_type):
-
-#         if set_type == "P":
-#             self.P.add(vertex)
-#         elif set_type == "D":
-#             self.D.add(vertex)
-#         else:
-#             raise ValueError("set_type must be either 'P' or 'D'")
-#         # Initialize the adjacency list for the new vertex
-#         self.adj_list[vertex] = []
-
-#     def add_edge(self, p, d):
-#         if (p in self.P and d in self.D) or (p in self.D and d in self.P):
-#             self.adj_list[p].append(d)
-#             self.adj_list[d].append(p)
-#         else:
-#             raise ValueError("Edge must connect vertices from different sets")
-
-#     def is_bipartite(self):
-#         color = {}
-#         for vertex in list(self.P) + list(self.D):
-#             if vertex not in color:
-#                 if not self._bfs_check(vertex, color):
-#                     return False
-#         return True
-
-#     def _bfs_check(self, start, color):
-#         from collections import deque
-
-#         queue = deque([start])
-#         color[start] = 0  # Start coloring with color 0
-
-#         while queue:
-#             vertex = queue.popleft()
-#             current_color = color[vertex]
-
-#             for neighbor in self.adj_list[vertex]:
-#                 if neighbor not in color:
-#                     color[neighbor] = 1 - current_color  # Alternate color
-#                     queue.append(neighbor)
-#                 elif color[neighbor] == current_color:
-#                     return False
-
-#         return True
-
-#     def display(self):
-#         print("Set P:", self.P)
-#         print("Set D:", self.D)
-#         print("Adjacency List:")
-#         for vertex, neighbors in self.adj_list.items():
-#             print(f"{vertex}: {neighbors}")
-
-
 def create_pathways_bipartite_graph(df: pd.DataFrame):
     B = nx.Graph()
 
-    # Dodawanie węzłów pathways i drugs
-    pathways = df["Name"].unique()
+    pathways = df["Pathway_ID"].unique()
     drugs = df["Drugs"].unique()
 
     B.add_nodes_from(pathways, bipartite=0, color="skyblue")
     B.add_nodes_from(drugs, bipartite=1, color="pink")
 
-    edges = [(row["Name"], row["Drugs"]) for _, row in df.iterrows()]
+    edges = [(row["Pathway_ID"], row["Drugs"]) for _, row in df.iterrows()]
     B.add_edges_from(edges)
 
     pos = nx.bipartite_layout(B, pathways)
@@ -156,9 +94,28 @@ def create_pathways_bipartite_graph(df: pd.DataFrame):
         font_size=5,
         edge_color="gray",
         font_weight="bold",
-        node_shape="s",
+        node_shape="o",
     )
+    pathway_x = [pos[node][0] for node in pathways]
+    drug_x = [pos[node][0] for node in drugs]
+    y_max = max(pos[node][1] for node in B.nodes) + 0.1
 
+    plt.text(
+        min(pathway_x),
+        y_max,
+        "Pathway_ID",
+        fontsize=10,
+        ha="center",
+        color="black",
+    )
+    plt.text(
+        max(drug_x),
+        y_max,
+        "DrugBank_ID",
+        fontsize=10,
+        ha="center",
+        color="black",
+    )
     plt.title("Pathways and Drug Interactions Bipartite Graph")
     plt.axis("off")
     plt.tight_layout()

@@ -269,8 +269,8 @@ class DataLoader:
                 name = product.find("db:name", ns).text
                 producer = product.find("db:labeller", ns).text
                 national_drug_code = product.find("db:ndc-product-code", ns).text
-                form = product.find("db:route", ns).text  # check
-                method_of_application = product.find("db:dosage-form", ns).text
+                form = product.find("db:dosage-form", ns).text
+                method_of_application = product.find("db:route", ns).text
                 dose_information = product.find("db:strength", ns).text
                 country = product.find("db:country", ns).text
                 agency = product.find("db:source", ns).text
@@ -309,7 +309,7 @@ class DataLoader:
                 category = pathway.find("db:category", ns).text
 
                 drugs_list = [
-                    drug_elem.find("db:name", ns).text
+                    drug_elem.find("db:drugbank-id", ns).text
                     for drug_elem in pathway.findall("db:drugs/db:drug", ns)
                 ]
 
