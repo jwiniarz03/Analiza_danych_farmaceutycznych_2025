@@ -1,9 +1,22 @@
 import pytest
 from src.drugs import Drug
+from src.products import Product
 
 
 def test_drug_initialization():
     """Test initialization of Drug class."""
+
+    product = Product(
+        name="Product A",
+        producer="Producer A",
+        ndc="NDC001",
+        form="Tablet",
+        application="Oral",
+        dosage="500mg",
+        country="USA",
+        agency="FDA",
+    )
+
     drug = Drug(
         name="Drug A",
         drug_id="DB0001",
@@ -16,6 +29,7 @@ def test_drug_initialization():
         food_interactions=["Sample food interactions."],
         synonyms=["Synonym 1", "Synonym 2"],
         groups=["Group 1", "Group2"],
+        products=set([product]),
     )
 
     assert drug.name == "Drug A"
@@ -29,6 +43,8 @@ def test_drug_initialization():
     assert drug.food_interactions == ["Sample food interactions."]
     assert drug.synonyms == ["Synonym 1", "Synonym 2"]
     assert drug.groups == ["Group 1", "Group2"]
+    assert len(drug.products) == 1
+    assert product in drug.products
 
 
 @pytest.mark.parametrize(
@@ -66,6 +82,18 @@ def test_drug_optional_fields(
 
 
 def test_drug_to_dict():
+
+    product = Product(
+        name="Product A",
+        producer="Producer A",
+        ndc="NDC001",
+        form="Tablet",
+        application="Oral",
+        dosage="500mg",
+        country="USA",
+        agency="FDA",
+    )
+
     drug = Drug(
         name="Drug A",
         drug_id="DB0001",
@@ -78,6 +106,7 @@ def test_drug_to_dict():
         food_interactions=["Sample food interactions."],
         synonyms=["Synonym 1", "Synonym 2"],
         groups=["Group 1", "Group2"],
+        products=set([product]),
     )
     drug_dict = drug.to_dict()
 
@@ -92,3 +121,5 @@ def test_drug_to_dict():
     assert drug_dict["Drug interactions"] == [{"Drug B": "Interaction B"}]
     assert drug_dict["Synonyms"] == ["Synonym 1", "Synonym 2"]
     assert drug_dict["Groups"] == ["Group 1", "Group2"]
+    assert len(drug_dict["Products"]) == 1
+    assert drug_dict["Products"][0]["Product name"] == "Product A"
