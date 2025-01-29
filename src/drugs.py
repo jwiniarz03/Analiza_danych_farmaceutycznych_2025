@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Set
+from src.products import Product
 
 
 class Drug:
@@ -16,6 +17,7 @@ class Drug:
         food_interactions: List[str] = None,
         synonyms: List[str] = None,
         groups: List[str] = None,
+        products: Set["Product"] = None,
     ):
         self.name = name
         self.drug_id = drug_id
@@ -28,6 +30,7 @@ class Drug:
         self.food_interactions = food_interactions if food_interactions else ["None"]
         self.synonyms = synonyms if synonyms else ["None"]
         self.groups = groups if groups else ["None"]
+        self.products = products if products else set("None")
 
     def to_dict(self) -> dict:
         return {
@@ -42,4 +45,5 @@ class Drug:
             "Drug interactions": self.drug_interactions,
             "Synonyms": self.synonyms,
             "Groups": self.groups,
+            "Products": [product.to_dict() for product in self.products],
         }
