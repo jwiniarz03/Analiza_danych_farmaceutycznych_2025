@@ -235,20 +235,7 @@ class DataLoader:
             ]
             groups = [group.text for group in drug.findall("db:groups/db:group", ns)]
 
-            new_Drug = Drug(
-                name,
-                id,
-                type,
-                description,
-                form,
-                indication,
-                mechanism_of_action,
-                food_interactions=food_interactions,
-                drug_interactions=drug_interactions,
-                synonyms=synonyms,
-                groups=groups,
-            )
-
+            products = set()
             for product in drug.findall("db:products/db:product", ns):
                 product_name = product.find("db:name", ns).text
                 producer = product.find("db:labeller", ns).text
@@ -269,7 +256,22 @@ class DataLoader:
                     country,
                     agency,
                 )
-                new_Drug.products.add(new_Product)
+                products.add(new_Product)
+
+                new_Drug = Drug(
+                    name,
+                    id,
+                    type,
+                    description,
+                    form,
+                    indication,
+                    mechanism_of_action,
+                    food_interactions=food_interactions,
+                    drug_interactions=drug_interactions,
+                    synonyms=synonyms,
+                    groups=groups,
+                    products=products,
+                )
 
             drugs.append(new_Drug)
 
@@ -314,7 +316,7 @@ class DataLoader:
 
         #     return products
 
-        # def parse_pathways(self) -> List[Pathway]:
+    def parse_pathways(self) -> List[Pathway]:
         """Parse XML Data and returns a list of Pathway objects."""
         tree = ET.parse(self.xml_data)
         root = tree.getroot()

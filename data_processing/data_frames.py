@@ -81,7 +81,7 @@ class UniversalDataFrame:
         self.data_loader = DataLoader(xml_file)
         self.targets = self.data_loader.parse_targets()
         self.drugs = self.data_loader.parse_drugs()
-        self.products = self.data_loader.parse_products()
+        # self.products = self.data_loader.parse_products()
         self.pathways = self.data_loader.parse_pathways()
 
     def create_targets_interactions_dataframe(self) -> pd.DataFrame:
@@ -129,12 +129,36 @@ class UniversalDataFrame:
 
         return df
 
-    def create_products_data_frame(self) -> pd.DataFrame:
+    # def create_products_data_frame(self) -> pd.DataFrame:
+    #     """Creates a DataFrame with products information."""
+
+    #     products_dicts = [product.to_dict() for product in self.products]
+    #     df = pd.DataFrame(products_dicts)
+
+    #     return df
+
+    def create_products_data_frame(self, drugs: list) -> pd.DataFrame:
         """Creates a DataFrame with products information."""
 
-        products_dicts = [product.to_dict() for product in self.products]
-        df = pd.DataFrame(products_dicts)
+        products_data = []
 
+        for drug in drugs:
+            for product in drug.products:
+                products_data.append(
+                    {
+                        "DrugBank ID": drug.drug_id,
+                        "Product Name": product.name,
+                        "Producer": product.producer,
+                        "National Drug Code": product.ndc,
+                        "Form": product.form,
+                        "Method of application": product.application,
+                        "Dose information": product.dosage,
+                        "Country": product.country,
+                        "Agency": product.agency,
+                    }
+                )
+
+        df = pd.DataFrame(products_data)
         return df
 
     def create_pathways_data_frame(self) -> pd.DataFrame:

@@ -30,7 +30,7 @@ class Drug:
         self.food_interactions = food_interactions if food_interactions else ["None"]
         self.synonyms = synonyms if synonyms else ["None"]
         self.groups = groups if groups else ["None"]
-        self.products = products if products else set("None")
+        self.products = products if products else set()
 
     def to_dict(self) -> dict:
         return {

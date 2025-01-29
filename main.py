@@ -32,13 +32,13 @@ if __name__ == "__main__":
     data_loader = DataLoader(file_path)
     targets = data_loader.parse_targets()
     drugs = data_loader.parse_drugs()
-    products = data_loader.parse_products()
+    # products = data_loader.parse_products()
     pathways = data_loader.parse_pathways()
 
     df_builder = UniversalDataFrame(file_path)
     protein_df = df_builder.create_targets_interactions_dataframe()
     df_drugs = df_builder.create_drugs_basic_informations_df()
-    df_products = df_builder.create_products_data_frame()
+    df_products = df_builder.create_products_data_frame(drugs)
     df_pathways = df_builder.create_pathways_data_frame()
     df_synonyms = df_builder.create_synonyms_data_frame()
     df_nr_pathways = df_builder.create_nr_of_pathways_data_frame()
@@ -60,4 +60,4 @@ if __name__ == "__main__":
 
     # bipartite_graph = create_pathways_bipartite_graph(df_pathways_interactions) # --> i think it cant be better xd
 
-    print(df_drug_interactions)
+    print(df_products)
