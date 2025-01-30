@@ -1,16 +1,7 @@
 from data_processing.data_loader import (
-    load_basic_drug_data,
-    load_drug_synonyms_data,
-    load_products_data,
-    load_pathways_drugs_data,
     DataLoader,
 )
 from data_processing.data_frames import (
-    create_data_frame_basic_info,
-    create_data_frame_synonyms,
-    create_data_frame_products,
-    create_data_frame_pathways,
-    create_data_frame_path_drug,
     UniversalDataFrame,
 )
 from visualisations.graphs import (
@@ -25,6 +16,7 @@ from visualisations.charts import (
     create_groups_pie_plot,
 )
 
+from analysis.averages_bar_plot import plot_average_weights, plot_boxplot
 import argparse
 import pandas as pd
 
@@ -63,6 +55,9 @@ def main():
         df_pathways_interactions
     )
 
+    # plot_average_weights(targets)
+    plot_boxplot(targets)
+
     # pie = create_pie_plot_targets(protein_df)  # --> to do
 
     # generate_draw_synonyms_graph(drug_id, drugs)  # --> mayby ok
@@ -72,9 +67,9 @@ def main():
 
     # create_groups_pie_plot( df_groups_number, df_drugs)  #  --> can be better
 
-    create_pathways_bipartite_graph(
-        df_pathways_interactions
-    )  # --> i think it cant be better xd
+    # create_pathways_bipartite_graph(
+    #     df_pathways_interactions
+    # )  # --> i think it cant be better xd
 
     # create_gene_graph("FCGR3B", drugs, targets)
     # pd.DataFrame.to_csv(df_synonyms, path_or_buf="data.csv")

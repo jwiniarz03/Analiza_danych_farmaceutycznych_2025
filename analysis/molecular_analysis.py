@@ -1,38 +1,29 @@
-from data_processing.data_loader import DataLoader
+from src.targets import Target
+from typing import List
 import pandas as pd
+import numpy as np
 from collections import defaultdict
 from statistics import mean
 
 
-class MolecularWeightAnalysis:
-    def __init__(self, xml_file: str):
-        self.data_loader = DataLoader(xml_file)
-        self.targets = self.data_loader.parse_targets()
+def compute_average_weights(targets: List[Target]) -> pd.DataFrame:
+    weight_dict = defaultdict(list)
 
-    def compute_average_weights(self) -> pd.DataFrame:
-        weight_dict = defaultdict(list)
+    for target in targets:
+        polypeptide = target.polypeptide
+        if polypeptide.cellular_location and polypeptide.molecular_weight:
+            try:
+                weight = float(polypeptide.molecular_weight)
+                weight_dict[polypeptide.cellular_location].append(weight)
+            except ValueError:
+                continue
 
-        for target in self.targets:
-            polypeptide = target.polypeptide
-            if polypeptide.cellular_location and polypeptide.molecular_weight:
-                try:
-                    weight = float(polypeptide.molecular_weight)
-                    weight_dict[polypeptide.cellular_location].append(weight)
-                except ValueError:
-                    continue
+    avg_weights = {
+        location: (mean(weights), np.std(weights) if weights else None)
+        for location, weights in weight_dict.items()
+    }
 
-        avg_weights = {
-            location: mean(weights) if weights else None
-            for location, weights in weight_dict.items()
-        }
-
-        return pd.DataFrame(
-            list(avg_weights.items()),
-            columns=["Cellular Location", "Average Molecular Weight"],
-        )
-
-
-data_loader = DataLoader("path/to/drugbank.xml")  # Update with actual XML path
-analysis = MolecularWeightAnalysis(data_loader)
-df = analysis.compute_average_weights()
-print(df)
+    return pd.DataFrame(
+        list(avg_weights.items()),
+        columns=["Cellular Location", "Average Molecular Weight", "Standard Deviation"],
+    )
