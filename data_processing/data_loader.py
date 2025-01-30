@@ -6,159 +6,22 @@ from src.products import Product
 from src.pathways import Pathway
 
 
-def load_basic_drug_data(xml_file: str) -> dict[str : dict[str:str]]:
-    """
-    Load the DrugBank partial XML file and parse its data for basic informations.
-
-    Args:
-        xml_file (str): Path to the DrugBank XML file.
-
-    Returns:
-        dict: Dictionary with drug id as keys and drug information as values.
-    """
-
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-
-    # Namespace handling for XML parsing
-    namespaces = {"db": "http://www.drugbank.ca"}
-
-    basic_drugs_data = {}
-    for drug in root.findall("db:drug", namespaces):
-        id = drug.find("db:drugbank-id[@primary='true']", namespaces).text
-        food_interactions = "\n".join(
-            [
-                food.text
-                for food in drug.findall(
-                    "db:food-interactions/db:food-interaction", namespaces
-                )
-            ]
-        )
-        if not food_interactions:
-            food_interactions = "None"
-        basic_drug_info = {
-            "name": drug.find("db:name", namespaces).text,
-            "type": drug.get("type"),
-            "description": drug.find("db:description", namespaces).text,
-            "form": drug.find("db:state", namespaces).text,
-            "indications": drug.find("db:indication", namespaces).text,
-            "mechanism_of_action": drug.find("db:mechanism-of-action", namespaces).text,
-            "food_interactions": food_interactions,
-        }
-        basic_drugs_data[id] = basic_drug_info
-
-    return basic_drugs_data
-
-
-def load_drug_synonyms_data(xml_file: str) -> dict[str:str]:
-    """
-    Load the DrugBank partial XML file and parse its data for synonyms informations.
-
-    Args:
-        xml_file (str): Path to the DrugBank XML file.
-
-    Returns:
-        dict: Dictionary with drug id as keys and a single string of synonyms separated by newlines as values.
-    """
-
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-
-    # Namespace handling for XML parsing
-    namespaces = {"db": "http://www.drugbank.ca"}
-
-    synonyms_drugs_data = {}
-    for drug in root.findall("db:drug", namespaces):
-        id = drug.find("db:drugbank-id[@primary='true']", namespaces).text
-        synonyms = "\n".join(
-            synonym.text
-            for synonym in drug.findall("db:synonyms/db:synonym", namespaces)
-        )
-
-        synonyms_drugs_data[id] = synonyms
-
-    return synonyms_drugs_data
-
-
-def load_products_data(xml_file) -> list[dict[str:str]]:
-    """
-    Load the DrugBank partial xml file and parse its data for informations about products.
-
-    Args:
-        xml_file (str): Path to the DrugBank XML file.
-
-    Returns:
-        list of dicts: List of products containing specified drug.
-    """
-
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-
-    # Namespace handling for XML parsing
-    ns = {"db": "http://www.drugbank.ca"}
-
-    basic_products_data = []
-
-    for drug in root.findall("db:drug", ns):
-        id = drug.find("db:drugbank-id[@primary='true']", ns).text
-        for product in drug.findall("db:products/db:product", ns):
-            product_data = {
-                "Drug ID": id,
-                "Product name": (product.find("db:name", ns).text),
-                "Producer": (product.find("db:labeller", ns).text),
-                "National Drug Code": (product.find("db:ndc-product-code", ns).text),
-                "Form": (product.find("db:dosage-form", ns).text),
-                "Method of application": (product.find("db:route", ns).text),
-                "Dose information": (product.find("db:strength", ns).text),
-                "Country": (product.find("db:country", ns).text),
-                "Agency": (product.find("db:source", ns).text),
-            }
-        basic_products_data.append(product_data)
-
-    return basic_products_data
-
-
-def load_pathways_drugs_data(xml_file) -> list[dict[str:str]]:
-
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-
-    # Namespace handling for XML parsing
-    ns = {"db": "http://www.drugbank.ca"}
-
-    drugs_data = []
-
-    for drug in root.findall("db:drug", ns):
-        for pathway in drug.findall("db:pathways/db:pathway", ns):
-            pathway_name = pathway.find("db:name", ns).text
-            category = pathway.find("db:category", ns).text
-            drugs_list = []
-            for drug in pathway.findall("db:drugs/db:drug", ns):
-                drug_name = drug.find("db:name", ns).text
-                drugs_list.append(drug_name)
-            drugs = ", ".join(drugs_list)
-            pathway_data = {
-                "Pathway": pathway_name,
-                "Category": category,
-                "Drug Name": drugs,
-            }
-            drugs_data.append(pathway_data)
-
-    return drugs_data
-
-
 class DataLoader:
 
     def __init__(self, xml_data: str):
         self.xml_data = xml_data
 
-    def parse_targets(self) -> List[Target]:
-        """Parse XML data and return a list of Target objects."""
+    def _load_data_from_file(self):
         tree = ET.parse(self.xml_data)
         root = tree.getroot()
 
         # Namespace handling for XML parsing
         ns = {"db": "http://www.drugbank.ca"}
+        return root, ns
+
+    def parse_targets(self) -> List[Target]:
+        """Parse XML data and return a list of Target objects."""
+        root, ns = self._load_data_from_file()
 
         targets = []
 
@@ -192,6 +55,9 @@ class DataLoader:
                     cellular_location=polypeptide_general.find(
                         "db:cellular-location", ns
                     ).text,
+                    mollecular_weight=polypeptide_general.find(
+                        "db:molecular-weight", ns
+                    ).text,
                 )
 
                 new_Target = Target(id, name, polypeptide)
@@ -202,11 +68,7 @@ class DataLoader:
     def parse_drugs(self) -> List[Drug]:
         """Parse XML data and return a list of Drug objects."""
 
-        tree = ET.parse(self.xml_data)
-        root = tree.getroot()
-
-        # Namespace handling for XML parsing
-        ns = {"db": "http://www.drugbank.ca"}
+        root, ns = self._load_data_from_file()
 
         drugs = []
         drug_interactions = []
@@ -279,11 +141,7 @@ class DataLoader:
 
     def parse_pathways(self) -> List[Pathway]:
         """Parse XML Data and returns a list of Pathway objects."""
-        tree = ET.parse(self.xml_data)
-        root = tree.getroot()
-
-        # Namespace handling for XML parsing
-        ns = {"db": "http://www.drugbank.ca"}
+        root, ns = self._load_data_from_file()
 
         pathways = []
         drugs_list = []

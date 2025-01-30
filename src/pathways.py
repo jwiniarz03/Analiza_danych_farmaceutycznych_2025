@@ -1,5 +1,4 @@
 from typing import List
-from src.drugs import Drug
 
 
 class Pathway:

@@ -16,6 +16,7 @@ from data_processing.data_frames import (
 from visualisations.graphs import (
     generate_draw_synonyms_graph,
     create_pathways_bipartite_graph,
+    create_gene_graph,
 )
 
 from visualisations.charts import (
@@ -24,10 +25,23 @@ from visualisations.charts import (
     create_groups_pie_plot,
 )
 
-if __name__ == "__main__":
+import argparse
+import pandas as pd
 
-    file_path = "drugbank_partial.xml"
-    drug_id = "DB00047"
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path", type=str, required=True)
+    parser.add_argument("--id", type=str, required=True)
+    args = parser.parse_args()
+    return args
+
+
+def main():
+
+    args = parse_arguments()
+    file_path = args.path
+    drug_id = args.id  # DB00047
 
     data_loader = DataLoader(file_path)
     targets = data_loader.parse_targets()
@@ -51,13 +65,24 @@ if __name__ == "__main__":
 
     # pie = create_pie_plot_targets(protein_df)  # --> to do
 
-    # nx_graph = generate_draw_synonyms_graph(drug_id, drugs)  # --> mayby ok
+    # generate_draw_synonyms_graph(drug_id, drugs)  # --> mayby ok
 
-    # histogram = plot_pathways_histogram(df_nr_pathways)  # --> i think ok
-    # histogram_all = plot_pathways_histogram(df_all_pathways_nr)
+    # plot_pathways_histogram(df_nr_pathways)  # --> i think ok
+    # plot_pathways_histogram(df_all_pathways_nr)
 
-    # gruoup_pie_plot = create_groups_pie_plot( df_groups_number, df_drugs)  #  --> can be better
+    # create_groups_pie_plot( df_groups_number, df_drugs)  #  --> can be better
 
-    # bipartite_graph = create_pathways_bipartite_graph(df_pathways_interactions) # --> i think it cant be better xd
+    create_pathways_bipartite_graph(
+        df_pathways_interactions
+    )  # --> i think it cant be better xd
 
-    print(df_products)
+    # create_gene_graph("FCGR3B", drugs, targets)
+    # pd.DataFrame.to_csv(df_synonyms, path_or_buf="data.csv")
+    # pd.DataFrame.to_excel(df_synonyms, "data.xlsx")
+    # pd.DataFrame.to_json(df_synonyms, path_or_buf="data.json", indent=4)
+
+    # print(df_synonyms)
+
+
+if __name__ == "__main__":
+    main()

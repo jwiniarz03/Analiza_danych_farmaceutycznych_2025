@@ -9,6 +9,7 @@ class Polypeptide:
         genatlas_id: str,
         chromosome_location: str,
         cellular_location: str,
+        mollecular_weight: str,
     ):
         self.id = id
         self.source = source
@@ -17,6 +18,7 @@ class Polypeptide:
         self.genatlas_id = genatlas_id
         self.chromosome_location = chromosome_location
         self.cellular_location = cellular_location
+        self.molecular_weight = mollecular_weight
 
     def to_dict(self) -> dict:
         return {
@@ -27,6 +29,7 @@ class Polypeptide:
             "GenAtlas ID": self.genatlas_id,
             "Chromosome number": self.chromosome_location,
             "Celular location": self.cellular_location,
+            "Molecular weight": self.molecular_weight,
         }
 
 

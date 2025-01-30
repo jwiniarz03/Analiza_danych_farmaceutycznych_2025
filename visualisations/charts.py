@@ -14,26 +14,26 @@ def plot_pathways_histogram(df: pd.DataFrame):
         raise ValueError("Given DataFrame is empty. No data to plot.")
 
     # wersja pionowa
-    # plt.figure(figsize=(18, 8))
-    # plt.bar(df["DrugBank_ID"], df["Nr_of_pathways"], color="green")
-    # plt.xlabel("DrugBank ID", fontsize=12, fontweight="bold")
-    # plt.ylabel("Number of Pathways", fontsize=12, fontweight="bold")
-    # plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
-    # plt.xticks(rotation=90, fontsize=8, fontweight="bold", ha="center")
-    # plt.xlim(-0.5, len(df["DrugBank_ID"]) - 0.5)
-    # plt.tight_layout()
-    # plt.show()
-
-    # wersja pozioma
-    plt.figure(figsize=(8, 8))
-    plt.barh(df["DrugBank_ID"], df["Nr_of_pathways"], color="pink")
-    plt.ylabel("DrugBank ID", fontsize=12, fontweight="bold")
-    plt.xlabel("Number of Pathways", fontsize=12, fontweight="bold")
+    plt.figure(figsize=(18, 8))
+    plt.bar(df["DrugBank_ID"], df["Nr_of_pathways"], color="green")
+    plt.xlabel("DrugBank ID", fontsize=12, fontweight="bold")
+    plt.ylabel("Number of Pathways", fontsize=12, fontweight="bold")
     plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
-    plt.yticks(fontsize=5, fontweight="bold")
-    plt.ylim(-0.5, len(df["DrugBank_ID"]) - 0.5)
+    plt.xticks(rotation=90, fontsize=8, fontweight="bold", ha="center")
+    plt.xlim(-0.5, len(df["DrugBank_ID"]) - 0.5)
     plt.tight_layout()
     plt.show()
+
+    # wersja pozioma
+    # plt.figure(figsize=(8, 8))
+    # plt.barh(df["DrugBank_ID"], df["Nr_of_pathways"], color="pink")
+    # plt.ylabel("DrugBank ID", fontsize=12, fontweight="bold")
+    # plt.xlabel("Number of Pathways", fontsize=12, fontweight="bold")
+    # plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
+    # plt.yticks(fontsize=5, fontweight="bold")
+    # plt.ylim(-0.5, len(df["DrugBank_ID"]) - 0.5)
+    # plt.tight_layout()
+    # plt.show()
 
 
 def create_pie_plot_targets(df: pd.DataFrame):

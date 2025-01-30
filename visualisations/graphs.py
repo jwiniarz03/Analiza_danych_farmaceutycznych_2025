@@ -4,7 +4,21 @@ import pandas as pd
 import textwrap
 from src.drugs import Drug
 from typing import List
-from src.targets import Polypeptide
+from src.targets import Target, Polypeptide
+
+
+def wrap_text(text: str, width: int) -> str:
+    """
+    Wraps the given text into multiple lines with a maximum of `width` characters per line.
+
+    Args:
+        text (str): The input text to be wrapped.
+        width (int): The maximum number of characters per line.
+
+    Returns:
+        str: The wrapped text with newline characters inserted.
+    """
+    return "\n".join(textwrap.wrap(text, width))
 
 
 def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
@@ -29,26 +43,19 @@ def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
         raise ValueError(f"Drug with ID {drug_id} has no synonyms.")
 
     G = nx.Graph()
-    G.add_node(drug_id, label="DrugBank ID")
+    G.add_node(drug_id, label=wrap_text(drug_id, 11))
 
     for synonym in drug.synonyms:
-        G.add_node(synonym, label="Synonym")
+        G.add_node(synonym, label=wrap_text(synonym, 11))
         G.add_edge(drug_id, synonym)
 
     plt.figure(figsize=(10, 8))
 
     position = nx.spring_layout(G, seed=0)
-    nx.draw_networkx_nodes(
-        G, position, node_size=5000, node_color="lightblue", edgecolors="black"
-    )
+    nx.draw_networkx_nodes(G, position, node_size=5000, node_color="lightblue")
     nx.draw_networkx_edges(G, position)
-    # nx.draw_networkx_labels(
-    #     G, position, font_size=10, font_color="black", font_weight="bold"
-    # )
-    labels = {}
-    for node in G.nodes:
-        wrapped_text = "\n".join(textwrap.wrap(node, width=10))
-        labels[node] = wrapped_text
+
+    labels = nx.get_node_attributes(G, "label")
     nx.draw_networkx_labels(
         G,
         position,
@@ -78,10 +85,9 @@ def create_pathways_bipartite_graph(df: pd.DataFrame):
 
     labels = {}
     for node in B.nodes:
-        wrapped_text = "\n".join(textwrap.wrap(node, width=13))
-        labels[node] = wrapped_text
+        labels[node] = wrap_text(node, 13)
 
-    plt.figure(figsize=(12, 10))
+    plt.figure(figsize=(14, 8))
     node_colors = [B.nodes[node]["color"] for node in B.nodes]
 
     nx.draw_networkx(
@@ -120,3 +126,15 @@ def create_pathways_bipartite_graph(df: pd.DataFrame):
     plt.axis("off")
     plt.tight_layout()
     plt.show()
+
+
+def create_gene_graph(gene_name: str, drugs: list, targets: list):
+    """
+    Plot a graph showing the relationship between a gene, associated drugs, and products.
+
+    Parameters:
+    - gene_name (str): The gene name to visualize.
+    - drugs (list): List of Drug objects.
+    """
+
+    # todo
