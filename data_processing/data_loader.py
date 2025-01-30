@@ -120,20 +120,20 @@ class DataLoader:
                 )
                 products.add(new_Product)
 
-                new_Drug = Drug(
-                    name,
-                    id,
-                    type,
-                    description,
-                    form,
-                    indication,
-                    mechanism_of_action,
-                    food_interactions=food_interactions,
-                    drug_interactions=drug_interactions,
-                    synonyms=synonyms,
-                    groups=groups,
-                    products=products,
-                )
+            new_Drug = Drug(
+                name,
+                id,
+                type,
+                description,
+                form,
+                indication,
+                mechanism_of_action,
+                food_interactions=food_interactions,
+                drug_interactions=drug_interactions,
+                synonyms=synonyms,
+                groups=groups,
+                products=products,
+            )
 
             drugs.append(new_Drug)
 

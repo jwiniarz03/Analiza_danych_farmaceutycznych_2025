@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def plot_pathways_histogram(df: pd.DataFrame):
+def plot_pathways_vertical_histogram(df: pd.DataFrame):
     """
-    Creates a histogram for data from a given DataFrame.
+    Creates a vertical histogram for data from a given DataFrame.
 
     Args:
         df (pd.DataFrame): DataFrame with drug_id and its number of pathways.
@@ -13,7 +13,6 @@ def plot_pathways_histogram(df: pd.DataFrame):
     if df.empty:
         raise ValueError("Given DataFrame is empty. No data to plot.")
 
-    # wersja pionowa
     plt.figure(figsize=(18, 8))
     plt.bar(df["DrugBank_ID"], df["Nr_of_pathways"], color="green")
     plt.xlabel("DrugBank ID", fontsize=12, fontweight="bold")
@@ -24,16 +23,27 @@ def plot_pathways_histogram(df: pd.DataFrame):
     plt.tight_layout()
     plt.show()
 
-    # wersja pozioma
-    # plt.figure(figsize=(8, 8))
-    # plt.barh(df["DrugBank_ID"], df["Nr_of_pathways"], color="pink")
-    # plt.ylabel("DrugBank ID", fontsize=12, fontweight="bold")
-    # plt.xlabel("Number of Pathways", fontsize=12, fontweight="bold")
-    # plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
-    # plt.yticks(fontsize=5, fontweight="bold")
-    # plt.ylim(-0.5, len(df["DrugBank_ID"]) - 0.5)
-    # plt.tight_layout()
-    # plt.show()
+
+def plot_pathways_horizontal_histogram(df: pd.DataFrame):
+    """
+    Creates a horizontal histogram for data from a given DataFrame.
+
+    Args:
+        df (pd.DataFrame): DataFrame with drug_id and its number of pathways.
+    """
+
+    if df.empty:
+        raise ValueError("Given DataFrame is empty. No data to plot.")
+
+    plt.figure(figsize=(8, 8))
+    plt.barh(df["DrugBank_ID"], df["Nr_of_pathways"], color="pink")
+    plt.ylabel("DrugBank ID", fontsize=12, fontweight="bold")
+    plt.xlabel("Number of Pathways", fontsize=12, fontweight="bold")
+    plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
+    plt.yticks(fontsize=5, fontweight="bold")
+    plt.ylim(-0.5, len(df["DrugBank_ID"]) - 0.5)
+    plt.tight_layout()
+    plt.show()
 
 
 def create_pie_plot_targets(df: pd.DataFrame):

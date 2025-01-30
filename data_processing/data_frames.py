@@ -55,14 +55,6 @@ class UniversalDataFrame:
 
         return df
 
-    # def create_products_data_frame(self) -> pd.DataFrame:
-    #     """Creates a DataFrame with products information."""
-
-    #     products_dicts = [product.to_dict() for product in self.products]
-    #     df = pd.DataFrame(products_dicts)
-
-    #     return df
-
     def create_products_data_frame(self, drugs: list) -> pd.DataFrame:
         """Creates a DataFrame with products information."""
 
@@ -92,10 +84,6 @@ class UniversalDataFrame:
 
         pathways_dicts = [pathway.to_dict() for pathway in self.pathways]
         df = pd.DataFrame(pathways_dicts)
-
-        count = len(df)
-
-        p_count = f"Całkowita liczba szkalów wynosi {count}."
 
         return df
 
