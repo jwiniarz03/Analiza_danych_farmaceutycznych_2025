@@ -16,7 +16,8 @@ from visualisations.charts import (
     create_groups_pie_plot,
 )
 
-from analysis.averages_bar_plot import plot_average_weights, plot_boxplot
+from analysis.averages_bar_plot import plot_average_weights, plot_distribution
+from analysis.molecular_analysis import compute_average_weights, run_anova
 import argparse
 import pandas as pd
 
@@ -54,9 +55,11 @@ def main():
     df_all_pathways_nr = df_builder.create_all_pathways_nr_data_frame(
         df_pathways_interactions
     )
+    df_molecular_weight = compute_average_weights(targets)
 
     # plot_average_weights(targets)
-    plot_boxplot(targets)
+    # run_anova(targets)
+    plot_distribution(targets)
 
     # pie = create_pie_plot_targets(protein_df)  # --> to do
 
@@ -75,8 +78,6 @@ def main():
     # pd.DataFrame.to_csv(df_synonyms, path_or_buf="data.csv")
     # pd.DataFrame.to_excel(df_synonyms, "data.xlsx")
     # pd.DataFrame.to_json(df_synonyms, path_or_buf="data.json", indent=4)
-
-    # print(df_synonyms)
 
 
 if __name__ == "__main__":

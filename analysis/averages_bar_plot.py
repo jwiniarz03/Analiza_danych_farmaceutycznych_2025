@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from analysis.molecular_analysis import compute_average_weights
+from analysis.molecular_analysis import compute_average_weights, get_weights
 from typing import List
 from src.targets import Target
 
@@ -13,7 +13,7 @@ def plot_average_weights(targets: List[Target]):
 
     plt.figure(figsize=(12, 6))
     sns.barplot(
-        x="Cellular Location", y="Average Molecular Weight", data=df[0, 1], color="pink"
+        x="Cellular Location", y="Average Molecular Weight", data=df, color="pink"
     )
     plt.xticks(rotation=45, ha="right", fontsize=8)
     plt.yticks(fontsize=8)
@@ -26,17 +26,20 @@ def plot_average_weights(targets: List[Target]):
     plt.show()
 
 
-def plot_boxplot(targets: List[Target]):
-    df = compute_average_weights(targets)
+def plot_distribution(targets: List[Target]):
+    df = get_weights(targets)
 
     plt.figure(figsize=(12, 6))
-    sns.boxplot(
+    sns.stripplot(
         x="Cellular Location",
         y="Molecular Weight",
-        data=df["Cellular location", "Average Molecular Weight"],
-        palette="Set2",
+        data=df,
+        jitter=True,
+        alpha=0.7,
+        color="darkblue",
     )
-    plt.xticks(rotation=45, ha="right")
-    plt.title("Molecular Weight Distribution by Cellular Location")
+    plt.xticks(rotation=45, ha="right", fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title("Molecular Weight Distribution")
     plt.tight_layout()
     plt.show()
