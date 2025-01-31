@@ -33,6 +33,12 @@ class Drug:
         self.products = products if products else set()
 
     def to_dict(self) -> dict:
+        """
+        Converts the Drug object to a dictionary representation.
+
+        Returns:
+            dict: A dictionary containing the drug's attributes and their values.
+        """
         return {
             "DrugBank ID": self.drug_id,
             "Name": self.name,

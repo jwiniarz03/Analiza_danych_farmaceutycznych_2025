@@ -21,6 +21,12 @@ class Polypeptide:
         self.molecular_weight = mollecular_weight
 
     def to_dict(self) -> dict:
+        """
+        Converts the Polypeptide object to a dictionary representation.
+
+        Returns:
+            dict: A dictionary containing the polypeptide's attributes and their values.
+        """
         return {
             "Polypeptide ID": self.id,
             "Source": self.source,
@@ -41,6 +47,12 @@ class Target:
         self.polypeptide = polypeptide
 
     def to_dict(self) -> dict:
+        """
+        Converts the Target object to a dictionary representation.
+
+        Returns:
+            dict: A dictionary containing the target's attributes and their values.
+        """
         return {
             "Target DrugBank ID": self.id,
             "Target Name": self.name,

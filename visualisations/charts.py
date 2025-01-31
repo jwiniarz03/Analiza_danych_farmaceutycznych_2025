@@ -12,6 +12,7 @@ def plot_pathways_vertical_histogram(df: pd.DataFrame, path_to_save: str = None)
 
     Args:
         df (pd.DataFrame): DataFrame with drug_id and its number of pathways.
+        path_to_save (str, optional): Path to save the generated plot. If None, the plot is displayed.
     """
 
     if df.empty:
@@ -37,6 +38,7 @@ def plot_pathways_horizontal_histogram(df: pd.DataFrame, path_to_save: str = Non
 
     Args:
         df (pd.DataFrame): DataFrame with drug_id and its number of pathways.
+        path_to_save (str, optional): Path to save the generated plot. If None, the plot is displayed.
     """
 
     if df.empty:
@@ -57,6 +59,13 @@ def plot_pathways_horizontal_histogram(df: pd.DataFrame, path_to_save: str = Non
 
 
 def create_pie_plot_targets(df: pd.DataFrame, path_to_save: str = None):
+    """
+    Creates a pie chart representing the distribution of cellular locations for targets.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing target cellular locations and DrugBank IDs.
+        path_to_save (str, optional): Path to save the generated plot. If None, the plot is displayed.
+    """
     agregated_data = (
         df.groupby("Cellular location")
         .agg(nr_of_targets=("DrugBank ID", "count"))
@@ -106,9 +115,7 @@ def create_groups_pie_plot(
     Args:
         df (pd.DataFrame): DataFrame with drug groups and the count of drugs in each group.
         df_drugs (pd.DataFrame): DataFrame containing unique drugs.
-
-    Returns:
-        None
+        path_to_save (str, optional): Path to save the generated plot. If None, the plot is displayed.
     """
 
     total_unique_drugs = len(df_drugs)
@@ -144,7 +151,14 @@ def create_groups_pie_plot(
         plt.show()
 
 
-def plot_average_weights(targets: List[Target], path_to_save: str):
+def plot_average_weights(targets: List[Target], path_to_save: str = None):
+    """
+    Creates a bar chart showing the average molecular weight for each cellular location.
+
+    Args:
+        targets (List[Target]): List of target objects.
+        path_to_save (str, optional): Path to save the generated plot. If None, the plot is displayed.
+    """
     df = compute_average_weights(targets).sort_values(
         by="Average Molecular Weight", ascending=False
     )

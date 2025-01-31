@@ -62,6 +62,7 @@ def test_drug_optional_fields(
     expected_synonyms,
     expected_groups,
 ):
+    """Test the handling of optional fields in the Drug class, ensuring None values are replaced properly."""
     drug = Drug(
         name="Drug A",
         drug_id="DB9999",
@@ -82,6 +83,7 @@ def test_drug_optional_fields(
 
 
 def test_drug_to_dict():
+    """Test the conversion of a Drug object to a dictionary representation."""
 
     product = Product(
         name="Product A",

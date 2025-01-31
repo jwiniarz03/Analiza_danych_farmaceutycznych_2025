@@ -18,6 +18,12 @@ class Pathway:
         self.enzymes = enzymes if enzymes else ["None"]
 
     def to_dict(self) -> dict:
+        """
+        Converts the Pathway object to a dictionary representation.
+
+        Returns:
+            dict: A dictionary containing the pathway's attributes and their values.
+        """
         return {
             "Pathway_ID": self.id,
             "Name": self.name,

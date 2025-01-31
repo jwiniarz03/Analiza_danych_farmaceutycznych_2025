@@ -48,6 +48,7 @@ def mock_dataloader():
 
 
 def test_parse_drugs_content(mock_dataloader):
+    """Test if parse_drugs correctly parse and returns drug data from the XML."""
     drugs = mock_dataloader.parse_drugs()
     assert len(drugs) == 1
     assert isinstance(drugs[0], Drug)
@@ -57,6 +58,7 @@ def test_parse_drugs_content(mock_dataloader):
 
 
 def test_parse_targets_content(mock_dataloader):
+    """Test if parse_targets correctly parse and returns targets data from the XML."""
     targets = mock_dataloader.parse_targets()
     print(len(targets) == 1)
     assert isinstance(targets[0], Target)
@@ -69,6 +71,7 @@ def test_parse_targets_content(mock_dataloader):
 
 
 def test_parse_pathways_content(mock_dataloader):
+    """Test if pathways correctly parse and returns pathways data from the XML."""
     pathways = mock_dataloader.parse_pathways()
     assert len(pathways) == 1
     assert isinstance(pathways[0], Pathway)
@@ -78,6 +81,7 @@ def test_parse_pathways_content(mock_dataloader):
 
 
 def test_empty_xml():
+    """Test if the DataLoader correctly handles an empty XML file, returning empty lists."""
     empty_loader = DataLoader("empty.xml")
     with patch(
         "xml.etree.ElementTree.parse",

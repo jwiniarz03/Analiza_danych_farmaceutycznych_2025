@@ -21,6 +21,12 @@ class Product:
         self.agency = agency
 
     def to_dict(self) -> dict:
+        """
+        Converts the Product object to a dictionary representation.
+
+        Returns:
+            dict: A dictionary containing the product's attributes and their values.
+        """
         return {
             "Product name": self.name,
             "Producer": self.producer,
@@ -33,6 +39,16 @@ class Product:
         }
 
     def __eq__(self, other):
+        """
+        Compares the current Product object with another one to check for equality.
+
+        Args:
+            other (Product): The other Product object to compare with.
+
+        Returns:
+            bool: True if the two Product objects have the same attribute values;
+                  False otherwise.
+        """
         if not isinstance(other, Product):
             return False
         return (
@@ -47,6 +63,13 @@ class Product:
         )
 
     def __hash__(self):
+        """
+        Computes a hash value for the Product object based on its attributes.
+
+        Returns:
+            int: The hash value for the Product object, which allows it to be used
+                 in sets or as dictionary keys.
+        """
         return hash(
             (
                 self.name,

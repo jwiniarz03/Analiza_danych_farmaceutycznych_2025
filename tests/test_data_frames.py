@@ -109,6 +109,7 @@ def mock_data_loader():
     ],
 )
 def test_dataframe_creation(mock_data_loader, method, expected_columns):
+    """Tests creation of DataFrames."""
     udf = UniversalDataFrame("dummy.xml")
     dataframe = getattr(udf, method)()
 
@@ -130,6 +131,7 @@ def test_dataframe_creation(mock_data_loader, method, expected_columns):
     ],
 )
 def test_dataframe_non_empty(mock_data_loader, method):
+    """Tests if DataFrame is not empty."""
     udf = UniversalDataFrame("dummy.xml")
     dataframe = getattr(udf, method)()
     assert not dataframe.empty, f"{method} returned an empty DataFrame"
@@ -137,6 +139,7 @@ def test_dataframe_non_empty(mock_data_loader, method):
 
 @pytest.mark.parametrize("expected_count", [1])
 def test_approved_not_withdrawn_count(mock_data_loader, expected_count):
+    """Tests counting approved not withdrawn drugs."""
     udf = UniversalDataFrame("dummy.xml")
     df = udf.create_groups_data_frame()
     assert (
