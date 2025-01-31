@@ -21,7 +21,9 @@ def wrap_text(text: str, width: int) -> str:
     return "\n".join(textwrap.wrap(text, width))
 
 
-def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
+def generate_draw_synonyms_graph(
+    drug_id: str, drugs: List[Drug], path_to_save: str = None
+) -> None:
     """
     Generate and draw a star graph of synonyms for a given DrugBank ID.
 
@@ -66,10 +68,13 @@ def generate_draw_synonyms_graph(drug_id: str, drugs: List[Drug]) -> None:
     )
     plt.title(f"Star Graph for DrugBank ID: {drug_id}")
 
-    plt.show()
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()
 
 
-def create_pathways_bipartite_graph(df: pd.DataFrame):
+def create_pathways_bipartite_graph(df: pd.DataFrame, path_to_save: str = None):
     B = nx.Graph()
 
     pathways = df["Pathway_ID"].unique()
@@ -125,10 +130,15 @@ def create_pathways_bipartite_graph(df: pd.DataFrame):
     plt.title("Pathways and Drug Interactions Bipartite Graph")
     plt.axis("off")
     plt.tight_layout()
-    plt.show()
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()
 
 
-def create_gene_graph(gene_name: str, drugs: list, targets: list):
+def create_gene_graph(
+    gene_name: str, drugs: list, targets: list, path_to_save: str = None
+):
     """
     Plot a graph showing the relationship between a gene, associated drugs, and products.
 

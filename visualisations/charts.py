@@ -1,8 +1,12 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+from analysis.molecular_analysis import compute_average_weights, get_weights
+from typing import List
+import seaborn as sns
+from src.targets import Target
 
 
-def plot_pathways_vertical_histogram(df: pd.DataFrame):
+def plot_pathways_vertical_histogram(df: pd.DataFrame, path_to_save: str = None):
     """
     Creates a vertical histogram for data from a given DataFrame.
 
@@ -14,17 +18,20 @@ def plot_pathways_vertical_histogram(df: pd.DataFrame):
         raise ValueError("Given DataFrame is empty. No data to plot.")
 
     plt.figure(figsize=(18, 8))
-    plt.bar(df["DrugBank_ID"], df["Nr_of_pathways"], color="green")
+    plt.bar(df["DrugBank_ID"], df["Nr_of_pathways"], color="pink")
     plt.xlabel("DrugBank ID", fontsize=12, fontweight="bold")
     plt.ylabel("Number of Pathways", fontsize=12, fontweight="bold")
     plt.title("Number of Pathways for each Drug", fontsize=14, fontweight="bold")
-    plt.xticks(rotation=90, fontsize=8, fontweight="bold", ha="center")
+    plt.xticks(rotation=0, fontsize=8, fontweight="bold", ha="center")
     plt.xlim(-0.5, len(df["DrugBank_ID"]) - 0.5)
     plt.tight_layout()
-    plt.show()
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()
 
 
-def plot_pathways_horizontal_histogram(df: pd.DataFrame):
+def plot_pathways_horizontal_histogram(df: pd.DataFrame, path_to_save: str = None):
     """
     Creates a horizontal histogram for data from a given DataFrame.
 
@@ -43,10 +50,13 @@ def plot_pathways_horizontal_histogram(df: pd.DataFrame):
     plt.yticks(fontsize=5, fontweight="bold")
     plt.ylim(-0.5, len(df["DrugBank_ID"]) - 0.5)
     plt.tight_layout()
-    plt.show()
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()
 
 
-def create_pie_plot_targets(df: pd.DataFrame):
+def create_pie_plot_targets(df: pd.DataFrame, path_to_save: str = None):
     agregated_data = (
         df.groupby("Cellular location")
         .agg(nr_of_targets=("DrugBank ID", "count"))
@@ -81,10 +91,15 @@ def create_pie_plot_targets(df: pd.DataFrame):
         handlelength=2.0,
     )
     plt.tight_layout()
-    plt.show()
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()
 
 
-def create_groups_pie_plot(df: pd.DataFrame, df_drugs: pd.DataFrame):
+def create_groups_pie_plot(
+    df: pd.DataFrame, df_drugs: pd.DataFrame, path_to_save: str = None
+):
     """
     Creates separate pie charts for each drug group, showing its proportion of the total unique drugs.
 
@@ -95,17 +110,6 @@ def create_groups_pie_plot(df: pd.DataFrame, df_drugs: pd.DataFrame):
     Returns:
         None
     """
-
-    # plt.figure(figsize=(8, 8))
-    # plt.pie(
-    #     df["Count"],
-    #     labels=df["Groups"],
-    #     startangle=180,
-    #     wedgeprops={"edgecolor": "black", "linewidth": 1},
-    # )
-    # plt.title("Distribution of Drug Groups")
-    # plt.tight_layout()
-    # plt.show()
 
     total_unique_drugs = len(df_drugs)
 
@@ -134,4 +138,52 @@ def create_groups_pie_plot(df: pd.DataFrame, df_drugs: pd.DataFrame):
         ax.axis("off")
 
     plt.tight_layout()
-    plt.show()
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()
+
+
+def plot_average_weights(targets: List[Target], path_to_save: str):
+    df = compute_average_weights(targets).sort_values(
+        by="Average Molecular Weight", ascending=False
+    )
+
+    plt.figure(figsize=(12, 6))
+    sns.barplot(
+        x="Cellular Location", y="Average Molecular Weight", data=df, color="pink"
+    )
+    plt.xticks(rotation=45, ha="right", fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.xlabel("Cellular Location", fontsize=10, fontweight="bold")
+    plt.ylabel("Average Molecular Weight", fontsize=10, fontweight="bold")
+    plt.title(
+        "Average Molecular Weight by Cellular Location", fontsize=16, fontweight="bold"
+    )
+    plt.tight_layout()
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()
+
+
+def plot_distribution(targets: List[Target], path_to_save: str):
+    df = get_weights(targets)
+
+    plt.figure(figsize=(12, 6))
+    sns.stripplot(
+        x="Cellular Location",
+        y="Molecular Weight",
+        data=df,
+        jitter=True,
+        alpha=0.7,
+        color="darkblue",
+    )
+    plt.xticks(rotation=45, ha="right", fontsize=8)
+    plt.yticks(fontsize=8)
+    plt.title("Molecular Weight Distribution")
+    plt.tight_layout()
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()
