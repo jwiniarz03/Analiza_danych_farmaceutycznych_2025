@@ -8,6 +8,18 @@ from scipy.stats import f_oneway
 
 
 def compute_average_weights(targets: List[Target]) -> pd.DataFrame:
+    """
+    Computes the average molecular weight and standard deviation for each cellular location
+    based on the provided list of Target objects.
+
+    Args:
+        targets (List[Target]): A list of Target objects that contain Polypeptide objects
+                                 with molecular weight and cellular location data.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the average molecular weight and standard deviation
+                      for each cellular location.
+    """
     weight_dict = defaultdict(list)
 
     for target in targets:
@@ -34,6 +46,17 @@ def compute_average_weights(targets: List[Target]) -> pd.DataFrame:
 
 
 def get_weights(targets: List[Target]) -> pd.DataFrame:
+    """
+    Extracts the molecular weight and cellular location for each target, returning
+    a DataFrame.
+
+    Args:
+        targets (List[Target]): A list of Target objects containing Polypeptide objects
+                                 with molecular weight and cellular location data.
+
+    Returns:
+        pd.DataFrame: A DataFrame with two columns: "Cellular Location" and "Molecular Weight".
+    """
     list = []
 
     for target in targets:
@@ -49,6 +72,17 @@ def get_weights(targets: List[Target]) -> pd.DataFrame:
 
 
 def run_anova(targets: List[Target]):
+    """
+    Runs an ANOVA test to determine if there are significant differences in molecular weights
+    between different cellular locations based on the provided list of Target objects.
+
+    Args:
+        targets (List[Target]): A list of Target objects containing Polypeptide objects
+                                 with molecular weight and cellular location data.
+
+    Prints:
+        The F-statistic and p-value of the ANOVA test.
+    """
     df = get_weights(targets)
 
     groups = [

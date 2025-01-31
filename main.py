@@ -7,8 +7,9 @@ from data_processing.data_frames import (
 from visualisations.graphs import (
     generate_draw_synonyms_graph,
     create_pathways_bipartite_graph,
-    create_gene_graph,
 )
+
+from visualisations.gene_graph import create_plot
 
 from visualisations.charts import (
     plot_pathways_vertical_histogram,
@@ -32,7 +33,8 @@ import os
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", type=str, required=True)
-    parser.add_argument("--id", type=str, required=True)
+    parser.add_argument("--drug_id", type=str, required=True)
+    parser.add_argument("--gene_id", type=str, required=True)
     args = parser.parse_args()
     return args
 
@@ -41,7 +43,8 @@ def main():
 
     args = parse_arguments()
     file_path = args.path
-    drug_id = args.id  # DB00047
+    drug_id = args.drug_id  # DB00047
+    gene_id = args.gene_id  # C1QA
 
     data_loader = DataLoader(file_path)
     targets = data_loader.parse_targets()
@@ -98,12 +101,12 @@ def main():
     df_drug_interactions = df_builder.create_drug_interactions_data_frame()
 
     # Number 11
-    # create_gene_graph("FCGR3B", drugs, targets)
+    create_plot(file_path, "results/gene_plot.png", gene_id)
 
     # Number 12
     df_molecular_weight = compute_average_weights(targets)
     plot_average_weights(targets, "results/average_molecular_weights_plot.png")
-    plot_distribution(targets, "results/distribution_of_molecular_weights_plot")
+    plot_distribution(targets, "results/distribution_of_molecular_weights_plot.png")
     run_anova(targets)
 
     # Results

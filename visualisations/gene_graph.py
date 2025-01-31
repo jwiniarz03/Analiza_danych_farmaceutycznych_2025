@@ -18,14 +18,13 @@ def wrap_text(text: str, width: int) -> str:
     return "\n".join(textwrap.wrap(text, width))
 
 
-def test(xml):
+def create_plot(xml, path_to_save, gene_id):
     tree = ET.parse(xml)
     root = tree.getroot()
 
     # Namespace handling for XML parsing
     ns = {"db": "http://www.drugbank.ca"}
 
-    gene_id = "C1QA"
     drugs = []
     results = {}
 
@@ -71,7 +70,7 @@ def test(xml):
         font_size=8,
         edge_color=edge_colors,
     )
-    plt.show()
-
-
-test("drugbank_partial.xml")
+    if path_to_save:
+        plt.savefig(path_to_save)
+    else:
+        plt.show()

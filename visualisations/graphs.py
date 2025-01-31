@@ -143,19 +143,3 @@ def create_pathways_bipartite_graph(df: pd.DataFrame, path_to_save: str = None):
         plt.savefig(path_to_save)
     else:
         plt.show()
-
-
-def create_gene_graph(
-    gene_name: str, drugs: list, targets: list, path_to_save: str = None
-):
-    """
-    Plot a graph showing the relationship between a gene, associated drugs, and products.
-
-    Args:
-        gene_name (str): The gene name to visualize.
-        drugs (list): List of Drug objects.
-        targets (list): List of Target objects related to the gene.
-        path_to_save (str, optional): Path to save the generated plot. If None, the plot is displayed.
-    """
-
-    # todo
