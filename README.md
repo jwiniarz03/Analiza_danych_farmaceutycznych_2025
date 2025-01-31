@@ -15,8 +15,9 @@ możliwości ograniczoną odpowiedzialność. Projekt zawiera 5 podkatalogów - 
 ## URUCHOMIENIE I TESTOWANIE PROJEKTU
 ### URUCHOMIENIE PROJEKTU
 Program uruchamiamy z terminalu (znajdując się w folderze Projekt_Python) poprzez komendę 'main.py'.
-Nalezy wówczas podać ściezkę do pliku xml we fladze --path (w tym przypadku jest to "drugbank_partial.xml").
-Następnie nalezy podać DrugBank ID leku, dla którego chcemy wyrysować graf synonimów (np."DB00047").
+Nalezy wówczas podać ściezkę do pliku xml we fladze --path (w tym przypadku jest to drugbank_partial.xml).
+Następnie nalezy we fladze --drug_id podać DrugBank ID leku, dla którego chcemy wyrysować graf synonimów (np.DB00047)
+oraz we fladze --gene_id podać id genu, dla którego chcemy wyrysować graf zalezności (np.C1QA).
 Wyniki zapisywane są w oddzielnych plikach: - DataFrame w formacie .json, wykresy w .png.
 
 ### TESTOWANIE PROJEKTU
