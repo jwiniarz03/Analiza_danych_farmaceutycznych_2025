@@ -12,6 +12,7 @@ def test_polypeptide_initialization():
         genatlas_id="GA001",
         chromosome_location="Chromosome A",
         cellular_location="Nucleus",
+        mollecular_weight="1000",
     )
 
     assert polypeptide.id == "P001"
@@ -21,6 +22,7 @@ def test_polypeptide_initialization():
     assert polypeptide.genatlas_id == "GA001"
     assert polypeptide.chromosome_location == "Chromosome A"
     assert polypeptide.cellular_location == "Nucleus"
+    assert polypeptide.molecular_weight == "1000"
 
 
 def test_polypeptide_to_dict():
@@ -33,6 +35,7 @@ def test_polypeptide_to_dict():
         genatlas_id="GA001",
         chromosome_location="Chromosome A",
         cellular_location="Nucleus",
+        mollecular_weight="1000",
     )
     polypeptide_dict = polypeptide.to_dict()
 
@@ -43,6 +46,7 @@ def test_polypeptide_to_dict():
     assert polypeptide_dict["GenAtlas ID"] == "GA001"
     assert polypeptide_dict["Chromosome number"] == "Chromosome A"
     assert polypeptide_dict["Celular location"] == "Nucleus"
+    assert polypeptide_dict["Molecular weight"] == "1000"
 
 
 def test_target_initialization():
@@ -55,6 +59,7 @@ def test_target_initialization():
         genatlas_id="GA001",
         chromosome_location="Chromosome A",
         cellular_location="Nucleus",
+        mollecular_weight="1000",
     )
     target = Target(id="T001", name="Target A", polypeptide=polypeptide)
 
@@ -73,6 +78,7 @@ def test_target_to_dict():
         genatlas_id="GA001",
         chromosome_location="Chromosome A",
         cellular_location="Nucleus",
+        mollecular_weight="1000",
     )
     target = Target(id="T001", name="Target A", polypeptide=polypeptide)
     target_dict = target.to_dict()
@@ -86,3 +92,4 @@ def test_target_to_dict():
     assert target_dict["Polypeptide"]["GenAtlas ID"] == "GA001"
     assert target_dict["Polypeptide"]["Chromosome number"] == "Chromosome A"
     assert target_dict["Polypeptide"]["Celular location"] == "Nucleus"
+    assert target_dict["Polypeptide"]["Molecular weight"] == "1000"

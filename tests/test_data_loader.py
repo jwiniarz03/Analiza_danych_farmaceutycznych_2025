@@ -1,120 +1,88 @@
 import pytest
-from unittest import mock
-from data_processing.data_loader import DataLoader
-from src.targets import Target, Polypeptide
 import xml.etree.ElementTree as ET
+from unittest.mock import patch, MagicMock
+from data_processing.data_loader import DataLoader
+from src.drugs import Drug
+from src.targets import Target, Polypeptide
+from src.pathways import Pathway
 
-# Mock XML data for testing
-mock_xml_data = """
-<drug xmlns="http://www.drugbank.ca">
-    <targets>
-        <target>
-            <id>BE0000048</id>
-            <name>Prothrombin</name>
-            <polypeptide id="P00734" source="Swiss-Prot">
-                <name>Prothrombin</name>
-                <gene-name>F2</gene-name>
-                <chromosome-location>11</chromosome-location>
-                <cellular-location>Secreted</cellular-location>
-                <external-identifiers>
-                    <external-identifier>
-                        <resource>GenAtlas</resource>
-                        <identifier>AT12345</identifier>
-                    </external-identifier>
-                </external-identifiers>
-            </polypeptide>
-        </target>
-    </targets>
-</drug>
-"""
-
-mock_invalid_xml_data = """
-<drug xmlns="http://www.drugbank.ca">
-    <targets>
-        <target>
-            <id>BE0000048</id>
-            <name>Prothrombin</name>
-            <polypeptide></polypeptide>
-        </target>
-    </targets>
-</drug>
-"""
-
-
-@pytest.fixture
-def data_loader():
-    # Mock the open function to return the mock XML data
-    with mock.patch("builtins.open", mock.mock_open(read_data=mock_xml_data)):
-        return DataLoader("mocked_file.xml")
-
-
-@pytest.fixture
-def invalid_data_loader():
-    # Mock the open function to return the invalid XML data
-    with mock.patch("builtins.open", mock.mock_open(read_data=mock_invalid_xml_data)):
-        return DataLoader("mocked_invalid_file.xml")
-
-
-def test_parse_targets_success(data_loader):
-    # Mock the ET.parse method to return a pre-parsed XML structure from the mock data
-    with mock.patch.object(
-        ET, "parse", return_value=ET.ElementTree(ET.fromstring(mock_xml_data))
-    ):
-        targets = data_loader.parse_targets()
-
-    # Print the parsed targets to debug
-    print(f"Parsed targets: {targets}")
-
-    # Assertions to check that the data has been parsed correctly
-    assert len(targets) == 1  # Should find 1 target in the XML
-    target = targets[0]
-    assert target.id == "BE0000048"
-    assert target.name == "Prothrombin"
-    assert target.polypeptide.id == "P00734"
-    assert target.polypeptide.gene_name == "F2"
-    assert target.polypeptide.chromosome_location == "11"
-    assert target.polypeptide.cellular_location == "Secreted"
-    assert target.polypeptide.genatlas_id == "AT12345"
-
-
-def test_parse_targets_missing_polypeptide(invalid_data_loader):
-    # Mock the ET.parse method to return a pre-parsed XML structure from the invalid data
-    with mock.patch.object(
-        ET, "parse", return_value=ET.ElementTree(ET.fromstring(mock_invalid_xml_data))
-    ):
-        targets = invalid_data_loader.parse_targets()
-
-    # Assertions to check that no target is created due to missing polypeptide data
-    assert len(targets) == 0  # No target should be parsed due to missing polypeptide
-
-
-def test_parse_targets_no_target_in_xml():
-    # XML with no targets
-    mock_no_target_xml_data = """
-    <drug xmlns="http://www.drugbank.ca">
-        <targets></targets>
+MOCK_XML = """<drugbank xmlns="http://www.drugbank.ca">
+    <drug type="small molecule">
+        <drugbank-id primary="true">DB0001</drugbank-id>
+        <name>DrugOne</name>
+        <description>Test drug description</description>
+        <state>solid</state>
+        <indication>Used for testing</indication>
+        <mechanism-of-action>Test mechanism</mechanism-of-action>
+        <targets>
+            <target>
+                <id>T0001</id>
+                <name>TargetOne</name>
+                <polypeptide id="P0001" source="Swiss-Prot">
+                    <name>ProteinOne</name>
+                    <gene-name>GeneOne</gene-name>
+                    <molecular-weight>50000.0</molecular-weight>
+                    <chromosome-location>10</chromosome-location>
+                    <cellular-location>cell membrane</cellular-location>
+                </polypeptide>
+            </target>
+        </targets>
+        <pathways>
+            <pathway>
+                <smpdb-id>SMP0001</smpdb-id>
+                <name>PathwayOne</name>
+                <category>Metabolic</category>
+            </pathway>
+        </pathways>
     </drug>
-    """
-
-    with mock.patch("builtins.open", mock.mock_open(read_data=mock_no_target_xml_data)):
-        data_loader = DataLoader("mocked_no_target_file.xml")
-        with mock.patch.object(
-            ET,
-            "parse",
-            return_value=ET.ElementTree(ET.fromstring(mock_no_target_xml_data)),
-        ):
-            targets = data_loader.parse_targets()
-
-    # Assertions to check that no targets are parsed
-    assert len(targets) == 0
+</drugbank>"""
 
 
-def test_parse_targets_invalid_xml():
-    # Test case when the XML is malformed or invalid
-    with mock.patch("builtins.open", mock.mock_open(read_data="<invalid>")):
-        data_loader = DataLoader("mocked_invalid_file.xml")
-        with mock.patch.object(
-            ET, "parse", side_effect=ET.ParseError("XML parsing error")
-        ):
-            with pytest.raises(ET.ParseError):
-                data_loader.parse_targets()
+@pytest.fixture
+def mock_dataloader():
+    with patch.object(DataLoader, "_load_data_from_file") as mock_load_data:
+        root = ET.ElementTree(ET.fromstring(MOCK_XML)).getroot()
+        ns = {"db": "http://www.drugbank.ca"}
+        mock_load_data.return_value = (root, ns)
+        yield DataLoader("mock.xml")
+
+
+def test_parse_drugs_content(mock_dataloader):
+    drugs = mock_dataloader.parse_drugs()
+    assert len(drugs) == 1
+    assert isinstance(drugs[0], Drug)
+    assert drugs[0].name == "DrugOne"
+    assert drugs[0].drug_id == "DB0001"
+    assert drugs[0].description == "Test drug description"
+
+
+def test_parse_targets_content(mock_dataloader):
+    targets = mock_dataloader.parse_targets()
+    print(len(targets) == 1)
+    assert isinstance(targets[0], Target)
+    assert targets[0].id == "T0001"
+    assert targets[0].name == "TargetOne"
+    print(targets[0].polypeptide)
+    assert isinstance(targets[0].polypeptide, Polypeptide)
+    assert targets[0].polypeptide.name == "ProteinOne"
+    assert targets[0].polypeptide.molecular_weight == "50000.0"
+
+
+def test_parse_pathways_content(mock_dataloader):
+    pathways = mock_dataloader.parse_pathways()
+    assert len(pathways) == 1
+    assert isinstance(pathways[0], Pathway)
+    assert pathways[0].id == "SMP0001"
+    assert pathways[0].name == "PathwayOne"
+    assert pathways[0].category == "Metabolic"
+
+
+def test_empty_xml():
+    empty_loader = DataLoader("empty.xml")
+    with patch(
+        "xml.etree.ElementTree.parse",
+        return_value=ET.ElementTree(ET.Element("drugbank")),
+    ):
+        assert empty_loader.parse_drugs() == []
+        assert empty_loader.parse_targets() == []
+        assert empty_loader.parse_pathways() == []

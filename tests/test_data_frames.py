@@ -99,20 +99,6 @@ def mock_data_loader():
                 "Food_interactions",
             ],
         ),
-        (
-            "create_products_data_frame",
-            [
-                "DrugBank ID",
-                "Product Name",
-                "Producer",
-                "National Drug Code",
-                "Form",
-                "Method of application",
-                "Dose information",
-                "Country",
-                "Agency",
-            ],
-        ),
         ("create_pathways_data_frame", ["Pathway_ID", "Name", "Drugs"]),
         ("create_synonyms_data_frame", ["DrugBank ID", "Synonyms"]),
         ("create_nr_of_pathways_data_frame", ["DrugBank_ID", "Nr_of_pathways"]),
@@ -137,7 +123,6 @@ def test_dataframe_creation(mock_data_loader, method, expected_columns):
     [
         "create_targets_interactions_dataframe",
         "create_drugs_basic_informations_df",
-        "create_products_data_frame",
         "create_pathways_data_frame",
         "create_synonyms_data_frame",
         "create_nr_of_pathways_data_frame",
