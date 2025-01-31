@@ -26,7 +26,6 @@ from analysis.counts import (
     show_nr_of_approved_not_withdrawn_drugs,
 )
 import argparse
-import pandas as pd
 import os
 
 
