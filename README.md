@@ -1,24 +1,35 @@
-# Projekt_Python
+# DrugBank Data Analyzer
 
-## DANE AUTORA:
-* JULIA WINIARZ
-* NR INDEKSU: 453877
-
-## POLECENIE:
-Celem projektu jest przeanalizowanie zawartości okrojonej wersji bazy leków: DrugBank i utworzeniu rónego rodzaju tabel i wykresów podsumowujących zawartość bazy leków.
-
-## PODZIAŁ KODU
-Projekt został podzielony na wiele plików, zawierających pojedyncze klasy, których metody mają w miarę
-możliwości ograniczoną odpowiedzialność. Projekt zawiera 5 podkatalogów - src: pliki definiujące główne klasy: Drug, Pathway, Product, Target i Polypeptide, analysis: własna analiza statystyczna oraz inne prostsze analizy, data_processing: ładowanie, parsowanie danych i tworzenie DataFrame, tests: lokalizacja zawierająca pliki z testami klas.
+Kompleksowe narzędzie analityczne zbudowane w języku Python do przetwarzania, statystycznej eksploracji i wizualizacji danych farmaceutycznych z bazy DrugBank. Projekt łączy inżynierię danych (ETL plików XML) z zaawansowaną analizą grafową oraz statystyczną.
 
 
-## URUCHOMIENIE I TESTOWANIE PROJEKTU
-### URUCHOMIENIE PROJEKTU
-Program uruchamiamy z terminalu (znajdując się w folderze Projekt_Python) poprzez komendę 'main.py'.
-Nalezy wówczas podać ściezkę do pliku xml we fladze --path (w tym przypadku jest to drugbank_partial.xml).
-Następnie nalezy we fladze --drug_id podać DrugBank ID leku, dla którego chcemy wyrysować graf synonimów (np.DB00047)
-oraz we fladze --gene_id podać id genu, dla którego chcemy wyrysować graf zalezności (np.C1QA).
-Wyniki zapisywane są w oddzielnych plikach: - DataFrame w formacie .json, wykresy w .png.
+## Architektura i technologie
+Projekt wykorzystuje podejście obiektowe (OOP), dzieląc odpowiedzialność na odseparowane moduły:
+- src/: Definicje głównych klas mapujących domenę (Drug, Pathway, Product, Target, Polypeptide).
+- data_processing/: Logika odpowiedzialna za ładowanie, parsowanie struktury XML i budowanie obiektów DataFrame.
+- analysis/ & visualisations/: Autorskie moduły realizujące testy statystyczne (m.in. ANOVA) oraz generowanie wykresów.
+- Technologie: Python 3, Pandas, NetworkX, Matplotlib/Plotly, Pytest.
 
-### TESTOWANIE PROJEKTU
-Wszelkie testy zapisane są w folderze 'tests'. By je uruchomić nalezy w terminalu wpisać komendę 'pytest tests/'.
+
+## Kluczowe funkcjonalności
+- Data Wrangling & ETL: Ekstrakcja i strukturyzacja danych ze złożonych plików XML do zoptymalizowanych ramek danych (obejmujących informacje o lekach, białkach docelowych, produktach farmaceutycznych i szlakach metabolicznych).
+- Analiza Sieciowa (Graph Analysis): Wykorzystanie biblioteki NetworkX do modelowania i wizualizacji złożonych relacji – w tym grafów dwudzielnych interakcji leków ze szlakami sygnałowymi oraz mapowania synonimów.
+- Analiza Statystyczna: Autorska analiza molekularna obejmująca obliczanie średnich mas cząsteczkowych, badanie ich rozkładu oraz przeprowadzanie analizy wariancji (ANOVA) dla zgromadzonych celów białkowych (targets).
+- Modułowe Wizualizacje: Automatyczne generowanie czytelnych raportów wizualnych w formacie .png (histogramy, wykresy kołowe, grafy zależności).
+
+
+## Uruchomienie lokalne
+### Główny pipeline analityczny
+Aby przetworzyć dane i wygenerować statystyki w postaci plików .json oraz wykresów .png, uruchom główny skrypt z terminala:
+```bash
+    python main.py --path "sciezka/do/drugbank_partial.xml" --drug_id DB00047 --gene_id C1QA
+```
+- --path: Ścieżka do pliku XML z bazą danych.
+- --drug_id: Identyfikator leku do wygenerowania grafu synonimów.
+- --gene_id: Identyfikator genu do analizy zależności i wygenerowania interaktywnego grafu.
+
+### Testowanie
+Logika aplikacji jest pokryta testami jednostkowymi. Aby upewnić się, że środowisko i parsery danych działają poprawnie, uruchom:
+```bash
+    pytest tests/
+```
